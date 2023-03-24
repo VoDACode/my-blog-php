@@ -11,7 +11,7 @@
 <body>
 
     <?php
-    $db = new DB();
+    $db = new Database();
     echo "Hello World!";
     ?>
 
