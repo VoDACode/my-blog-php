@@ -1,6 +1,7 @@
 <?
-include 'db.php';
-include 'config.php';
+namespace providers;
+use root\Database;
+use root\AppConfig;
 class Provider{
     protected $db;
     public function __construct(){
@@ -12,6 +13,7 @@ class Provider{
     }
 
     protected function getTableName(string $className){
-        return PROVIDERS_TABLE[$className];
+        $className = explode('\\', $className)[1];
+        return AppConfig::$PROVIDERS_TABLE[$className];
     }
 }

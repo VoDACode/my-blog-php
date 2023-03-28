@@ -1,10 +1,11 @@
 <?
+include 'Authorized.php';
+
 $result = new ArrayObject();
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     include 'providers' . DIRECTORY_SEPARATOR . 'UserProvider.php';
     $provider = new UserProvider();
-    $event = $_GET['event'];
-    if ($event == 'delete') {
+    if (isset($_GET['event']) && $_GET['event'] == 'delete') {
         $id = $_GET['id'];
         if($id == 1) {
             header('Location: ' . $_SERVER['PHP_SELF']);

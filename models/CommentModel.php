@@ -1,4 +1,6 @@
 <?
+namespace models;
+use models\Model;
 class CommentModel extends Model {
     public $authorId;
     public $postId;

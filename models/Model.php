@@ -1,4 +1,5 @@
 <?
+namespace models;
 abstract class Model {
     public $id;
     

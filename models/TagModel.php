@@ -1,5 +1,6 @@
 <?
-
+namespace models;
+use models\Model;
 class TagModel extends Model{
     public $name;
     public $createdAt;

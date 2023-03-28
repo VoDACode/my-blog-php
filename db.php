@@ -1,17 +1,19 @@
 <?
-include 'config.php';
+namespace root;
+include_once 'config.php';
+use SQLite3;
 class Database extends SQLite3
 {
     private static $firstRun = true;
     function __construct()
     {
-        if(file_exists(DB_FILE) && filesize(DB_FILE) > 0) {
+        if(file_exists(\root\AppConfig::$DB_FILE) && filesize(\root\AppConfig::$DB_FILE) > 0) {
             self::$firstRun = false;
         }
-        if(!file_exists(DB_FILE) || filesize(DB_FILE) == 0) {
+        if(!file_exists(\root\AppConfig::$DB_FILE) || filesize(\root\AppConfig::$DB_FILE) == 0) {
             self::$firstRun = true;
         }
-        $this->open(DB_FILE);
+        $this->open(\root\AppConfig::$DB_FILE);
         $this->createTables();
     }
 
@@ -20,7 +22,7 @@ class Database extends SQLite3
         if(!self::$firstRun) {
             return;
         }
-        foreach (DB_TABLES as $table => $query) {
+        foreach (\root\AppConfig::$DB_TABLES as $table => $query) {
             $this->exec($query);
         }
         self::$firstRun = false;

@@ -1,5 +1,5 @@
 <?php
-    require_once 'db.php';
+
 ?>
 
 <html>
@@ -11,7 +11,6 @@
 <body>
 
     <?php
-    $db = new Database();
     echo "Hello World!";
     ?>
 

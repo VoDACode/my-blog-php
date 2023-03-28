@@ -1,4 +1,6 @@
 <?
+namespace models;
+use models\Model;
 class PostModel extends Model{
     public $title;
     public $content;

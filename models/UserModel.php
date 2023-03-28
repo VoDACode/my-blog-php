@@ -1,5 +1,6 @@
 <?
-include 'Model.php';
+namespace models;
+use models\Model;
 class UserModel extends Model {
     public $name;
     public $email;

@@ -1,4 +1,6 @@
 <?
+namespace models;
+use models\Model;
 class FileModel extends Model{
     public $name;
     public $size;
