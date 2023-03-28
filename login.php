@@ -19,9 +19,35 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 }
 ?>
 
-<form action="login.php" method="post">
-    <input type="text" name="username" />
-    <input type="password" name="password" />
-    <input type="submit" value="Login" />
-</form>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sign in</title>
+    <link rel="stylesheet" href="assets/css/general.css" />
+    <link rel="stylesheet" href="assets/css/login.css" />
+</head>
+
+<body>
+    <div class="background">
+        <div class="login-panel">
+            <h1 class="header-sign-in">Log in as a user</h1>
+            <form action="login.php" method="post">
+                <p class="username-header sub-header">Username</p>
+                <input class="username" type="text" name="username" />
+                <br /><br />
+                <p class="password-header sub-header">Password</p>
+                <input class="password" type="password" name="password" />
+                <input class="apply" type="submit" value="Login" />
+            </form>
+            <div class="reg-offer">
+                <p class="reg-offer-header">Don't have an account?</p>
+                <a class="reg-link" href="http://blog.local/registration.php">Sign up</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
 <?php echo $error; ?>

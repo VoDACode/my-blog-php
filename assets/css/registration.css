@@ -1,0 +1,64 @@
+.background {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
+    font-family: 'Robotic', sans-serif;
+}
+
+.reg-panel {
+    position: relative;
+    background-color: rgb(230, 230, 230);
+    width: 600px;
+    height: 450px;
+    border-radius: 10px;
+}
+
+.reg-panel form {
+    margin-top: 100px;
+    width: fit-content;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+.header-create-acc {
+    cursor: default;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 10px;
+}
+
+.sub-header {
+    cursor: default;
+    font-size: 22px;
+}
+
+.username, .password, .email {
+    padding-inline: 2px;
+    outline: none;
+    border: 2px solid black;
+    border-radius: 5px;
+    width: 500px;
+    font-size: 22px;
+}
+
+.apply {
+    cursor: pointer;
+    outline: none;
+    margin-top: 40px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    padding: 5px;
+    border: 3px solid rgb(67, 67, 67);
+}
+
+.apply :hover {
+    -webkit-box-shadow: 0px 0px 9px 5px rgba(0,0,0,0.55);
+    -moz-box-shadow: 0px 0px 9px 5px rgba(0,0,0,0.55);
+    box-shadow: 0px 0px 9px 5px rgba(0,0,0,0.55);
+}
