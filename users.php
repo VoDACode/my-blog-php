@@ -1,9 +1,10 @@
 <?
+include 'providers' . DIRECTORY_SEPARATOR . 'include.php';
 include 'Authorized.php';
+use providers\UserProvider;
 
 $result = new ArrayObject();
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    include 'providers' . DIRECTORY_SEPARATOR . 'UserProvider.php';
     $provider = new UserProvider();
     if (isset($_GET['event']) && $_GET['event'] == 'delete') {
         $id = $_GET['id'];
