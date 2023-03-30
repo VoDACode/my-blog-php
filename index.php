@@ -7,11 +7,12 @@
 <head>
     <title>My Blog</title>
     <link rel="stylesheet" href="assets/css/general.css" />
-    <link rel="stylesheet" href="assets/css/index.css">
+    <link rel="stylesheet" href="assets/css/index.css" />
 </head>
 
 <body>
-
+    <? include "objects/header.php"; ?>
+    <br /><br /><br /><br /><br />
     <main>
         <div class="make-post">
             <form action="" method="POST">
@@ -117,7 +118,9 @@
                         amet ultricies lacinia, nisl nisl aliquam libero, eget lacinia
                         nisl nisl eget nisl.
                         <br>
-                        Unde in debitis ex. Officiis excepturi beatae fugiat repellat est ut. Blanditiis quam non aut qui eveniet ut debitis omnis. Molestias ipsam animi qui laborum cumque vel eaque harum perspiciatis.
+                        Unde in debitis ex. Officiis excepturi beatae fugiat repellat est ut. Blanditiis quam non aut
+                        qui eveniet ut debitis omnis. Molestias ipsam animi qui laborum cumque vel eaque harum
+                        perspiciatis.
                     </p>
                     <div class="files">
                         <div class="list">

@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
+    <? include "objects/header.php"; ?>
     <div class="background">
         <div class="reg-panel">
             <h1 class="header-create-acc">Create new account</h1>

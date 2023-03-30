@@ -29,6 +29,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 </head>
 
 <body>
+    <? include "objects/header.php"; ?>
     <div class="background">
         <div class="login-panel">
             <h1 class="header-sign-in">Log in as a user</h1>
@@ -42,7 +43,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             </form>
             <div class="reg-offer">
                 <p class="reg-offer-header">Don't have an account?</p>
-                <a class="reg-link" href="http://blog.local/registration.php">Sign up</a>
+                <a class="reg-a" href="http://blog.local/registration.php">Register</a>
             </div>
         </div>
     </div>

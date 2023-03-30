@@ -37,7 +37,8 @@
     font-size: 22px;
 }
 
-.username, .password {
+.username,
+.password {
     padding-inline: 2px;
     outline: none;
     border: 2px solid black;
@@ -58,9 +59,9 @@
 }
 
 .apply :hover {
-    -webkit-box-shadow: 0px 0px 9px 5px rgba(0,0,0,0.55);
-    -moz-box-shadow: 0px 0px 9px 5px rgba(0,0,0,0.55);
-    box-shadow: 0px 0px 9px 5px rgba(0,0,0,0.55);
+    -webkit-box-shadow: 0px 0px 9px 5px rgba(0, 0, 0, 0.55);
+    -moz-box-shadow: 0px 0px 9px 5px rgba(0, 0, 0, 0.55);
+    box-shadow: 0px 0px 9px 5px rgba(0, 0, 0, 0.55);
 }
 
 .reg-offer {
@@ -84,7 +85,7 @@
     font-weight: 300;
 }
 
-.reg-link {
+.reg-a {
     position: absolute;
     top: 80px;
     left: 50%;
