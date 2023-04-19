@@ -1,2 +1,1 @@
-@@echo off
-php artisan serve
+php -S localhost:8000
