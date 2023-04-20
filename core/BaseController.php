@@ -1,7 +1,9 @@
 <?
+
 namespace core;
 
-abstract class BaseController{
+abstract class BaseController
+{
     protected $request;
     protected $httpUser;
 
@@ -13,13 +15,12 @@ abstract class BaseController{
     protected function requireAuth()
     {
         $token = $_ENV['AUTH_TOKEN_MODEL']::getToken();
-        echo 'Token: '.$token.'<br>';
-        if(!isset($token)){
+        if (!isset($token)) {
             $this->Unauthorized();
         }
         $user = $_ENV['AUTH_TOKEN_MODEL']::checkToken($token);
-        $this->httpUser = $user;
-        if($user === false){
+        $this->httpUser = Auth::get();
+        if ($user === false) {
             $this->Unauthorized();
         }
     }
@@ -28,49 +29,56 @@ abstract class BaseController{
     {
         $validator = new Validator($rules);
         $validator->validate($this->request->body);
-        if($validator->hasErrors()){
+        if ($validator->hasErrors()) {
             $this->BadRequest($validator->getErrors());
         }
     }
 
-    protected function POST(){
-        if($this->request->method != 'POST'){
+    protected function POST()
+    {
+        if ($this->request->method != 'POST') {
             $this->MethodNotAllowed();
         }
     }
 
-    protected function GET(){
-        if($this->request->method != 'GET'){
+    protected function GET()
+    {
+        if ($this->request->method != 'GET') {
             $this->MethodNotAllowed();
         }
     }
 
-    protected function PUT(){
-        if($this->request->method != 'PUT'){
+    protected function PUT()
+    {
+        if ($this->request->method != 'PUT') {
             $this->MethodNotAllowed();
         }
     }
 
-    protected function DELETE(){
-        if($this->request->method != 'DELETE'){
+    protected function DELETE()
+    {
+        if ($this->request->method != 'DELETE') {
             $this->MethodNotAllowed();
         }
     }
 
-    protected function PATCH(){
-        if($this->request->method != 'PATCH'){
+    protected function PATCH()
+    {
+        if ($this->request->method != 'PATCH') {
             $this->MethodNotAllowed();
         }
     }
 
-    protected function OPTIONS(){
-        if($this->request->method != 'OPTIONS'){
+    protected function OPTIONS()
+    {
+        if ($this->request->method != 'OPTIONS') {
             $this->MethodNotAllowed();
         }
     }
 
-    protected function HEAD(){
-        if($this->request->method != 'HEAD'){
+    protected function HEAD()
+    {
+        if ($this->request->method != 'HEAD') {
             $this->MethodNotAllowed();
         }
     }
@@ -108,9 +116,9 @@ abstract class BaseController{
     protected function File($path)
     {
         $file = file_get_contents($path);
-        header('Content-Type: '.mime_content_type($path));
-        header('Content-Length: '.filesize($path));
-        header('Content-Disposition: attachment; filename="'.basename($path).'"');
+        header('Content-Type: ' . mime_content_type($path));
+        header('Content-Length: ' . filesize($path));
+        header('Content-Disposition: attachment; filename="' . basename($path) . '"');
         file_put_contents('php://output', $file);
         die();
     }
@@ -127,21 +135,32 @@ abstract class BaseController{
     {
         $this->sendResponse('Method not allowed', 405);
         die();
-    } 
+    }
 
-    protected function Redirect($url){
-        header('Location: '.$url);
+    protected function Redirect($url)
+    {
+        header('Location: ' . $url);
         die();
     }
 
     private function sendResponse($content, $code = 200)
     {
         http_response_code($code);
-        if(is_array($content) || is_object($content)){
+        if (is_array($content) || is_object($content)) {
             header('Content-Type: application/json');
             $content = json_encode($content);
         }
         echo $content;
         die();
+    }
+
+    protected function getRandomString(int $len)
+    {
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $str = '';
+        for ($i = 0; $i < $len; $i++) {
+            $str .= $chars[rand(0, strlen($chars) - 1)];
+        }
+        return $str;
     }
 }

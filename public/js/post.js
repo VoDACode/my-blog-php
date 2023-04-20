@@ -13,17 +13,19 @@
         const imageViewer = imageViewers[i];
 
         const imageBoxes = imageViewer.querySelectorAll('.image-container > div');
-        const images = imageViewer.querySelectorAll('.image-container > div > img');
-        const selectedImage = imageViewer.querySelector('.selected-image > img');
+        const images = imageViewer.querySelectorAll('.image-container > div > img:not(.remove)');
+        const selectedImage = imageViewer.querySelector('.selected-image > img:not(.remove)');
         const imageBox = imageViewer.querySelector('.image-container');
 
         const addEventsForImage = (root, boxes) => {
             const defaultImage = imageViewer.querySelector('.image-container > div:not([disabled])');
             if (defaultImage !== null) {
                 defaultImage.setAttribute('selected', true);
-                selectedImage.src = defaultImage.querySelector('img').src;
-                const index = Array.from(boxes).indexOf(defaultImage);
-                selectedImage.setAttribute('data-index', index);
+                if (defaultImage.querySelector('img:not(.remove)') != null) {
+                    selectedImage.src = defaultImage.querySelector('img:not(.remove)').src;
+                    const index = Array.from(boxes).indexOf(defaultImage);
+                    selectedImage.setAttribute('data-index', index);
+                }
             }
             for (let i = 0, k = 0; i < boxes.length; i++, k++) {
                 if (boxes[i].getAttribute('disabled') !== null) {
@@ -32,7 +34,7 @@
                 boxes[i].setAttribute('data-index', i);
                 boxes[i].addEventListener('click', (() => {
                     boxes[i].setAttribute('selected', true);
-                    const image = boxes[i].querySelector('img');
+                    const image = boxes[i].querySelector('img:not(.remove)');
                     const lastIndex = selectedImage.getAttribute('data-index');
                     if (lastIndex !== null && lastIndex > -1) {
                         boxes[lastIndex].removeAttribute('selected');
@@ -95,6 +97,9 @@
                     });
                 }
             }
+            addImageButton.addEventListener('click', () => {
+                inputFiles.click();
+            });
         };
 
         addEventsForImage(imageBox, imageBoxes);

@@ -14,22 +14,25 @@ class User extends DB implements IAuthUser
             'primary' => true,
             'autoincrement' => true
         ],
-        'name' =>[
+        'name' => [
             'type' => 'TEXT',
             'unique' => true,
             'min' => 3,
             'max' => 255,
+            'notnull' => true,
         ],
         'email' => [
             'type' => 'TEXT',
             'unique' => true,
             'min' => 3,
             'max' => 255,
+            'notnull' => true,
         ],
         'password' => [
             'type' => 'TEXT',
             'min' => 3,
-            'max' => 255
+            'max' => 255,
+            'notnull' => true,
         ],
         'created_at' => [
             'type' => 'TEXT',
@@ -51,7 +54,9 @@ class User extends DB implements IAuthUser
 
     public function check()
     {
-        return isset($_SESSION['user']);
+        if (!isset($_SESSION['user']))
+            return false;
+        return AuthToken::checkToken(AuthToken::getToken());
     }
 
     public function get()
@@ -87,7 +92,7 @@ class User extends DB implements IAuthUser
 
     public function getByEmail($email)
     {
-        $user = $this->select()->where("email = :email",[
+        $user = $this->select()->where("email = :email", [
             ':email' => $email
         ])->run();
         if (count($user) == 0) {

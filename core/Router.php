@@ -165,10 +165,11 @@ class RouteRecord
         $this->pattern = $pattern;
         if (is_string($callback)) {
             $path = explode('@', $callback);
+            $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $this->parseUrl($_SERVER['REQUEST_URI']), getallheaders());
             if (count($path) == 1) {
                 $this->callback = $path[0];
             } else {
-                $this->callback = [new $path[0], $path[1]];
+                $this->callback = [new $path[0]($request), $path[1]];
             }
         } else if (is_callable($callback))
             $this->callback = $callback;
@@ -204,6 +205,14 @@ class RouteRecord
                     $action = $funcNameAndParams;
                 } else {
                     $action = $funcNameAndParams[0];
+                }
+                $urlParams = [];
+                {
+                    $tmp = explode('?', $action);
+                    if (count($tmp) > 1) {
+                        $action = $tmp[0];
+                        $urlParams = explode('&', $tmp[1]);
+                    }
                 }
                 $methods = get_class_methods($controller);
                 if (in_array($action, $methods) == false) {

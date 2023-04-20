@@ -2,7 +2,7 @@
     use core\URL;
 ?>
 <div class="make-post">
-    <form action="" method="POST">
+    <form action="/posts/create" method="POST" enctype="multipart/form-data">
         <div class="input-box">
             <input type="text" name="title" id="title" placeholder="Title">
         </div>
@@ -16,13 +16,13 @@
                         <img src="<?= URL::asset('img/plus.svg') ?>">
                     </div>
                     <div>
-                        <img src="http://placeimg.com/640/480/any">
+                        
                     </div>
                 </div>
             </div>
         </div>
         <div class="input-box">
-            <textarea name="text" id="text" placeholder="Content"></textarea>
+            <textarea name="content" id="text" placeholder="Content"></textarea>
         </div>
         <div class="input-box">
             <div id="files-drop-area">
@@ -31,14 +31,11 @@
             </div>
             <div id="uploaded-file-list">
             </div>
-            <input type="file" name="file" id="input-files" multiple="true" />
-        </div>
-        <div class="input-box">
-            <input type="text" name="tags" id="tags" placeholder="Tags">
+            <input type="file" name="file[]" id="input-files" multiple/>
         </div>
         <div class="input-box checkbox">
             <label for="canHaveComments">Can have comments: </label>
-            <input type="checkbox" name="canHaveComments" id="canHaveComments" checked>
+            <input type="checkbox" name="can_have_comments" id="canHaveComments" checked>
         </div>
         <input type="submit" value="Publish post">
     </form>

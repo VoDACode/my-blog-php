@@ -5,6 +5,8 @@ use core\View;
 use core\Auth;
 use app\controllers\API\UserController;
 use app\controllers\API\AuthController;
+use app\controllers\API\FileController;
+use app\controllers\Http\PostController;
 use app\providers\User;
 
 View::layout('partials.layout');
@@ -50,7 +52,12 @@ Router::get("/logout", function ($req) {
     $req->redirect('/');
 });
 
-Router::any('/', function ($req) {
+Router::get("/", PostController::class . '@index');
+Router::any("/posts", PostController::class);
+
+Router::get("/fs", FileController::class);
+
+Router::any('/test/post', function ($req) {
     View::render('posts', [
         'styles' => [
             '/css/post.css'
@@ -63,7 +70,7 @@ Router::any('/', function ($req) {
             [
                 'id' => 1,
                 'title' => 'Title 1',
-                'date' => '2020-01-01',
+                'created_at' => '2020-01-01',
                 'rating' => 0,
                 'images' => [
                     'http://placeimg.com/640/480/any',
