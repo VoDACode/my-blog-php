@@ -53,6 +53,7 @@ class DB
         $this->sql = "UPDATE $this->table SET ";
         $i = 0;
         foreach ($data as $key => $value) {
+            $value = self::cleanString($value);
             $this->sql .= "$key = '$value'";
             if ($i < count($data) - 1) {
                 $this->sql .= ', ';
@@ -76,6 +77,7 @@ class DB
         $this->sql .= ') VALUES (';
         $i = 0;
         foreach ($data as $key => $value) {
+            $value = self::cleanString($value);
             $this->sql .= "'$value'";
             if ($i < count($data) - 1) {
                 $this->sql .= ', ';
@@ -88,6 +90,7 @@ class DB
 
     public function like($column, $value)
     {
+        $value = self::cleanString($value);
         $this->sql .= " WHERE $column LIKE '%$value%'";
         return $this;
     }
@@ -98,7 +101,7 @@ class DB
         return $this;
     }
 
-    public function limit($limit)
+    public function limit(int $limit)
     {
         $this->sql .= " LIMIT $limit";
         return $this;
@@ -192,5 +195,19 @@ class DB
             throw new \Exception($this->connection->lastErrorMsg());
         }
         return $this;
+    }
+
+    public static function cleanString($str) {
+        $str = strip_tags($str); // remove HTML and PHP tags
+        $str = htmlentities($str, ENT_QUOTES); // encode special characters
+        $str = str_replace("'", "\'", $str); // escape single quotes
+        $str = str_replace('"', '\"', $str); // escape double quotes
+        // fix sql injection
+        $str = str_replace(';', '', $str);
+        $str = str_replace('--', '', $str);
+        $str = str_replace('/*', '', $str);
+        $str = str_replace('*/', '', $str);
+        $str = str_replace('xp_', '', $str);
+        return $str;
     }
 }

@@ -5,6 +5,7 @@ namespace app\providers;
 use Exception;
 use SQLite3;
 
+// Older version of the Provider class. It was replaced by the DB class.
 abstract class Provider
 {
     protected $columns = [];

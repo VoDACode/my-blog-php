@@ -52,12 +52,105 @@ class Router
     }
     static function run()
     {
+        // Handle public files.
+        if (self::handlePublic($_SERVER['REQUEST_URI']) == true)
+            return true;
+
         foreach (self::$routes as $route) {
             if ($route->run()) {
                 return true;
             }
         }
         return false;
+    }
+
+    private static function handlePublic($path)
+    {
+        $parts = explode('/', $path);
+        if (count($parts) < 2)
+            return false;
+        $first_part = $parts[1];
+        if ($first_part == 'public') {
+            if (DIRECTORY_SEPARATOR == '\\')
+                $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+            else
+                $path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
+            if ($path[0] == DIRECTORY_SEPARATOR){
+                $path = substr($path, 1);
+            }
+            $file = $_ENV['ROOT_PATH'] . $path;
+            if (file_exists($file)) {
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                $mime = 'text/plain';
+                switch ($ext) {
+                    case 'css':
+                        $mime = 'text/css';
+                        break;
+                    case 'js':
+                        $mime = 'text/javascript';
+                        break;
+                    case 'png':
+                        $mime = 'image/png';
+                        break;
+                    case 'jpg':
+                    case 'jpeg':
+                        $mime = 'image/jpeg';
+                        break;
+                    case 'gif':
+                        $mime = 'image/gif';
+                        break;
+                    case 'svg':
+                        $mime = 'image/svg+xml';
+                        break;
+                    case 'ico':
+                        $mime = 'image/x-icon';
+                        break;
+                    case 'woff':
+                        $mime = 'font/woff';
+                        break;
+                    case 'woff2':
+                        $mime = 'font/woff2';
+                        break;
+                    case 'ttf':
+                        $mime = 'font/ttf';
+                        break;
+                    case 'eot':
+                        $mime = 'font/eot';
+                        break;
+                    case 'otf':
+                        $mime = 'font/otf';
+                        break;
+                    case 'json':
+                        $mime = 'application/json';
+                        break;
+                    case 'xml':
+                        $mime = 'application/xml';
+                        break;
+                    case 'pdf':
+                        $mime = 'application/pdf';
+                        break;
+                    case 'zip':
+                        $mime = 'application/zip';
+                        break;
+                    case 'rar':
+                        $mime = 'application/x-rar-compressed';
+                        break;
+                    case '7z':
+                        $mime = 'application/x-7z-compressed';
+                        break;
+                    case 'mp3':
+                        $mime = 'audio/mpeg';
+                        break;
+                    default:
+                        $mime = 'text/plain';
+                }
+                header('Content-Type: ' . $mime);
+                readfile($file);
+            } else {
+                header('HTTP/1.0 404 Not Found');
+            }
+            return true;
+        }
     }
 }
 
@@ -98,8 +191,7 @@ class RouteRecord
             } else if (is_string($this->callback)) {
                 $controller = new $this->callback($request);
                 $action = str_replace($this->pattern, '', $request_url);
-                $funcNameAndParams = explode('/', $action);
-                {
+                $funcNameAndParams = explode('/', $action); {
                     $tmp = [];
                     foreach ($funcNameAndParams as $key => $value) {
                         if ($value != '' && $value != ' ') {
@@ -108,37 +200,37 @@ class RouteRecord
                     }
                     $funcNameAndParams = $tmp;
                 }
-                if(count($funcNameAndParams) == 0){
+                if (count($funcNameAndParams) == 0) {
                     $action = $funcNameAndParams;
-                }else{
+                } else {
                     $action = $funcNameAndParams[0];
                 }
                 $methods = get_class_methods($controller);
                 if (in_array($action, $methods) == false) {
-                    if(in_array('index', $methods) == false)
+                    if (in_array('index', $methods) == false)
                         return false;
                     $action = 'index';
-                }else{
+                } else {
                     $funcRef = new \ReflectionMethod($this->callback, $action);
                     $funcParams = $funcRef->getParameters();
-                    if(count($funcNameAndParams) - 1 != count($funcParams)){
+                    if (count($funcNameAndParams) - 1 != count($funcParams)) {
                         return false;
                     }
                     $params = [];
                     foreach ($funcParams as $key => $value) {
-                        if(is_numeric($funcNameAndParams[$key+1]) && $value->getType() == 'int'){
-                            $params[] = (int)$funcNameAndParams[$key+1];
-                        }elseif(is_numeric($funcNameAndParams[$key+1]) && $value->getType() == 'float'){
-                            $params[] = (float)$funcNameAndParams[$key+1];
-                        }elseif(is_numeric($funcNameAndParams[$key+1]) && $value->getType() == 'double'){
-                            $params[] = (double)$funcNameAndParams[$key+1];
-                        }elseif(is_string($funcNameAndParams[$key+1]) && $value->getType() == 'string'){
-                            $params[] = $funcNameAndParams[$key+1];
-                        }elseif(is_bool($funcNameAndParams[$key+1]) && $value->getType() == 'bool'){
-                            $params[] = (bool)$funcNameAndParams[$key+1];
-                        }elseif(is_bool($funcNameAndParams[$key+1]) && $value->getType() == 'boolean'){
-                            $params[] = (boolean)$funcNameAndParams[$key+1];
-                        }else{
+                        if (is_numeric($funcNameAndParams[$key + 1]) && $value->getType() == 'int') {
+                            $params[] = (int)$funcNameAndParams[$key + 1];
+                        } elseif (is_numeric($funcNameAndParams[$key + 1]) && $value->getType() == 'float') {
+                            $params[] = (float)$funcNameAndParams[$key + 1];
+                        } elseif (is_numeric($funcNameAndParams[$key + 1]) && $value->getType() == 'double') {
+                            $params[] = (float)$funcNameAndParams[$key + 1];
+                        } elseif (is_string($funcNameAndParams[$key + 1]) && $value->getType() == 'string') {
+                            $params[] = $funcNameAndParams[$key + 1];
+                        } elseif (is_bool($funcNameAndParams[$key + 1]) && $value->getType() == 'bool') {
+                            $params[] = (bool)$funcNameAndParams[$key + 1];
+                        } elseif (is_bool($funcNameAndParams[$key + 1]) && $value->getType() == 'boolean') {
+                            $params[] = (bool)$funcNameAndParams[$key + 1];
+                        } else {
                             return false;
                         }
                     }

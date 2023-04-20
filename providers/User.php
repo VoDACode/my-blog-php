@@ -61,6 +61,8 @@ class User extends DB implements IAuthUser
 
     public function login($login, $password)
     {
+        $login = DB::cleanString($login);
+        $password = DB::cleanString($password);
         $user = $this->select()->where("name = '$login' OR email = '$login'")->run();
         if (count($user) == 0) {
             return false;
@@ -84,6 +86,7 @@ class User extends DB implements IAuthUser
 
     public function getByEmail($email)
     {
+        $email = DB::cleanString($email);
         $user = $this->select()->where("email = '$email'")->run();
         if (count($user) == 0) {
             return false;
@@ -93,6 +96,7 @@ class User extends DB implements IAuthUser
 
     public function getByName($name)
     {
+        $name = DB::cleanString($name);
         $user = $this->select()->where("name = '$name'")->run();
         if (count($user) == 0) {
             return false;
