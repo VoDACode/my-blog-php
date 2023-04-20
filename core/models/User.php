@@ -96,7 +96,7 @@ class User extends DB implements IAuthUser{
     }
 
     public function login($login, $password){
-        $user = $this->select()->where('login = '.$login)->first()->run();
+        $user = $this->select()->where('login = :login', [':login' => $login])->first()->run();
         if($user && password_verify($password, $user['password'])){
             $_SESSION['user'] = $user;
             return true;

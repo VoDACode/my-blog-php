@@ -6,9 +6,9 @@ class DB
 {
     private $connection;
     private $sql;
+    private $params = [];
     public $table = '';
     public $fields = [];
-    public $rules = [];
 
     public $timestamps = false;
 
@@ -36,9 +36,13 @@ class DB
         return $this;
     }
 
-    public function where($where)
+    /*
+        where('id = :id', [':id' => 1])
+    */
+    public function where($template, $params = [])
     {
-        $this->sql .= " WHERE $where";
+        $this->sql .= " WHERE $template";
+        $this->params = $params;
         return $this;
     }
 
@@ -53,8 +57,8 @@ class DB
         $this->sql = "UPDATE $this->table SET ";
         $i = 0;
         foreach ($data as $key => $value) {
-            $value = self::cleanString($value);
-            $this->sql .= "$key = '$value'";
+            $this->params[":update_$key"] = $value;
+            $this->sql .= "$key = :update_$key";
             if ($i < count($data) - 1) {
                 $this->sql .= ', ';
             }
@@ -77,21 +81,14 @@ class DB
         $this->sql .= ') VALUES (';
         $i = 0;
         foreach ($data as $key => $value) {
-            $value = self::cleanString($value);
-            $this->sql .= "'$value'";
+            $this->params[":insert_$key"] = $value;
+            $this->sql .= ":insert_$key";
             if ($i < count($data) - 1) {
                 $this->sql .= ', ';
             }
             $i++;
         }
         $this->sql .= ')';
-        return $this;
-    }
-
-    public function like($column, $value)
-    {
-        $value = self::cleanString($value);
-        $this->sql .= " WHERE $column LIKE '%$value%'";
         return $this;
     }
 
@@ -125,6 +122,9 @@ class DB
             return [];
         }    
         $stmt = $this->connection->prepare($this->sql);
+        foreach ($this->params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
         $result = $stmt->execute();
         if ($this->connection->lastErrorCode() != 0) {
             throw new \Exception($this->connection->lastErrorMsg());
@@ -135,9 +135,11 @@ class DB
                 $data[] = $row;
             }
             $this->sql = '';
+            $this->params = [];
             return $data;
         } else {
             $this->sql = '';
+            $this->params = [];
             return $this->connection->lastInsertRowID();
         }
     }
@@ -195,19 +197,5 @@ class DB
             throw new \Exception($this->connection->lastErrorMsg());
         }
         return $this;
-    }
-
-    public static function cleanString($str) {
-        $str = strip_tags($str); // remove HTML and PHP tags
-        $str = htmlentities($str, ENT_QUOTES); // encode special characters
-        $str = str_replace("'", "\'", $str); // escape single quotes
-        $str = str_replace('"', '\"', $str); // escape double quotes
-        // fix sql injection
-        $str = str_replace(';', '', $str);
-        $str = str_replace('--', '', $str);
-        $str = str_replace('/*', '', $str);
-        $str = str_replace('*/', '', $str);
-        $str = str_replace('xp_', '', $str);
-        return $str;
     }
 }

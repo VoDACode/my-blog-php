@@ -20,7 +20,7 @@ class UserController extends \core\BaseController
     public function info(int $id)
     {
         $this->requireAuth();
-        echo json_encode($this->userProvider->select()->where("id = $id")->run());
+        echo json_encode($this->userProvider->select()->where("id = :id", [':id' => $id])->run());
     }
 
     public function create()
@@ -32,13 +32,13 @@ class UserController extends \core\BaseController
     public function update($id)
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $user = $this->userProvider->update($data)->where("id = $id")->run();
+        $user = $this->userProvider->update($data)->where("id = :id", [':id' => $id])->run();
         echo json_encode($user);
     }
 
     public function destroy($id)
     {
-        $this->userProvider->delete()->where("id = $id")->run();
+        $this->userProvider->delete()->where("id = :id", [':id' => $id])->run();
         echo 'User deleted';
     }
 }

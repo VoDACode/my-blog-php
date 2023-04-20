@@ -62,7 +62,9 @@ class AuthToken extends DB
     public static function checkToken($token)
     {
         $provider = new AuthToken();
-        $result = $provider->select('user_id')->where('token = '.$token)->run();
+        $result = $provider->select('user_id')->where('token = :token', [
+            ':token' => $token
+        ])->run();
         if(count($result) > 0)
             return $result[0]['user_id'];
         else
@@ -71,21 +73,28 @@ class AuthToken extends DB
 
     public static function deleteToken($token)
     {
-        (new AuthToken())->delete()->where('token = \''.$token.'\'')->run();
+        (new AuthToken())->delete()->where('token = :token', [
+            ':token' => $token
+        ])->run();
         setcookie('token', '', time() - 3600, '/');
         session_destroy();
     }
 
     public static function deleteAllTokens($user_id)
     {
-        (new AuthToken())->delete()->where('user_id = '.$user_id)->run();
+        (new AuthToken())->delete()->where('user_id = :user_id', [
+            ':user_id' => $user_id
+        ])->run();
         setcookie('token', '', time() - 3600, '/');
         session_destroy();
     }
 
     public static function updateToken($token)
     {
-        (new AuthToken())->update(['updated_at' => 'CURRENT_TIMESTAMP'])->where('token = '.$token)->run();
+        (new AuthToken())->update(['updated_at' => 'CURRENT_TIMESTAMP'])->
+                            where('token = :token', [
+                                ':token' => $token
+                            ])->run();
         self::setToken($token);
     }
 }
