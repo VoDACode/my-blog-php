@@ -1,0 +1,67 @@
+.main-header {
+    margin-top: 15px;
+    font-size: 36px;
+    text-align: center;
+}
+
+.user-list {
+    position: relative;
+    width: 1200px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+.user-record {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    width: 100%;
+    border: solid 3px rgb(28, 28, 28);
+    margin-top: 20px;
+    padding: 15px;
+}
+
+.user-list-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    width: 100%;
+    margin-top: 20px;
+    padding-inline: 15px;
+    padding-top: 15px;
+}
+
+.user-list-header-prop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.user-record-prop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-record-button {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    padding-inline: 20px;
+    padding-block: 7px;
+    margin-inline: 3px;
+}
+
+.edit-user-link {
+    background-color: rgb(28, 28, 28);
+}
+
+.delete-user-link {
+    background-color: rgb(177, 24, 24);
+}

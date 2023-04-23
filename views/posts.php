@@ -5,6 +5,7 @@ use \core\Auth;
 use \core\View;
 ?>
 
+<br /><br /><br /><br />
 <main>
 
     <? if (Auth::check() && (Auth::get()['can_make_post'] == 1 || Auth::get()['id'] == 1)) { ?>
