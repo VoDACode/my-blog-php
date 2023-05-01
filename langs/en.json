@@ -1,3 +1,66 @@
 {
-    "login-panel-header": "Log in"
+    "404": {
+        "title": "Page not found",
+        "message": "The page you are looking for does not exist."
+    },
+    "header":{
+        "users": "Users",
+        "logout": "Log out",
+        "login": "Log in",
+        "register": "Register"
+    },
+    "login-panel":{
+        "title": "Log in",
+        "username": "Username",
+        "password": "Password",
+        "login": "Log in",
+        "do-not-have-account": "Don't have an account?",
+        "register": "Register"
+    },
+    "register-panel":{
+        "title": "Register",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "repeat-password": "Repeat password",
+        "register": "Register"
+    },
+    "users-page":{
+        "title": "Users",
+        "table": {
+            "username": "Username",
+            "email": "Email",
+            "can-publish-posts": "Can publish posts",
+            "yes": "Yes",
+            "no": "No",
+            "created-at": "Created at",
+            "actions": "Actions",
+            "edit": "Edit",
+            "delete": "Delete"
+        }
+    },
+    "pub-create-form":{
+        "title": "Title",
+        "content": "Content",
+        "drag-and-drop": "Drag and drop files here or click to upload",
+        "can-have-comments": "Can have comments",
+        "publish": "Publish"
+    },
+    "posts":{
+        "no-posts": "There are no posts yet",
+        "no-comments": "There are no comments yet",
+        "size":{
+            "b": "B",
+            "kb": "KB",
+            "mb": "MB",
+            "gb": "GB",
+            "tb": "TB"
+        }
+    },
+    "comment":{
+        "modified": "Modified",
+        "published": "Published",
+        "show-more": "Show more",
+        "reply": "Reply"
+    }
 }

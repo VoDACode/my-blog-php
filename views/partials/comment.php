@@ -1,6 +1,7 @@
 <?
 
 use \core\View;
+use \core\Locale;
 ?>
 <div class="item" comment-id="<?= $comment['id'] ?>">
     <div class="post">
@@ -19,11 +20,11 @@ use \core\View;
                 <div class="date">
                     <div class="last-edit">
                         <? if (isset($comment['modified'])) { ?>
-                            <p>Modified: <?= $comment['modified'] ?></p>
+                            <p><?= Locale::get('comment.modified') ?>: <?= $comment['modified'] ?></p>
                         <? } ?>
                     </div>
                     <div class="post">
-                        <p>Published: <?= $comment['date'] ?></p>
+                        <p><?= Locale::get('comment.published') ?>: <?= $comment['date'] ?></p>
                     </div>
                 </div>
             </div>
@@ -36,10 +37,10 @@ use \core\View;
     </div>
     <div class="answers">
         <div class="content">
-            <? if($comment['has_replies'] == true) { ?>
-                <span class="create-reply">Show more...</span><br/>
+            <? if ($comment['has_replies'] == true) { ?>
+                <span class="create-reply"><?= Locale::get('comment.show-more') ?>...</span><br />
             <? } ?>
-            <span class="create-reply">Reply to...</span>
+            <span class="create-reply"><?= Locale::get('comment.reply') ?>...</span>
         </div>
     </div>
 </div>

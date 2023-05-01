@@ -9,3 +9,6 @@ body {
     display: grid;
     grid-template-rows: auto auto;
 }
+.container{
+    margin-top: 70px;
+}

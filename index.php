@@ -1,15 +1,16 @@
 <?php
 namespace app;
 use FFI\Exception;
+session_start();
 loader();
 
 use core\Router;
 use core\View;
 
-session_start();
+
 // This is the main function. It runs the router and renders the 404 page if the router returns false and the 404 view exists.
 if(Router::run() == false && View::hasView('404')){
-    View::render('404', ['title' => 'Page not found']);
+    View::render('404');
 }
 
 // This is the loader function. It loads all the files and initializes the database.

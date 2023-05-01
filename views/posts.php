@@ -3,6 +3,7 @@
 use \core\URL;
 use \core\Auth;
 use \core\View;
+use \core\Locale;
 ?>
 
 <br /><br /><br /><br />
@@ -16,7 +17,7 @@ use \core\View;
 
     <? if (count($posts) == 0) : ?>
         <div class="no-posts">
-            <h1>There are no posts yet</h1>
+            <h1><?= Locale::get('posts.no-posts') ?></h1>
         </div>
     <? else : ?>
         <div class="post-box">
@@ -68,15 +69,15 @@ use \core\View;
                                         <div class="size">
                                             <p><?
                                                 if ($file['size'] < 1024) {
-                                                    echo $file['size'] . ' B';
+                                                    echo $file['size'] . ' '.Locale::get('posts.size.b');
                                                 } else if ($file['size'] < 1048576) {
-                                                    echo round($file['size'] / 1024, 2) . ' KB';
+                                                    echo round($file['size'] / 1024, 2) . ' '.Locale::get('posts.size.kb');
                                                 } else if ($file['size'] < 1073741824) {
-                                                    echo round($file['size'] / 1048576, 2) . ' MB';
+                                                    echo round($file['size'] / 1048576, 2) . ' '.Locale::get('posts.size.mb');
                                                 } else if ($file['size'] < 1099511627776) {
-                                                    echo round($file['size'] / 1073741824, 2) . ' GB';
+                                                    echo round($file['size'] / 1073741824, 2) . ' '.Locale::get('posts.size.gb');
                                                 } else {
-                                                    echo round($file['size'] / 1099511627776, 2) . ' TB';
+                                                    echo round($file['size'] / 1099511627776, 2) . ' '.Locale::get('posts.size.tb');
                                                 }
                                                 ?></p>
                                         </div>

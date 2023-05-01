@@ -3,6 +3,7 @@
 use core\Router;
 use core\View;
 use core\Auth;
+use core\Locale;
 use app\controllers\API\UserController;
 use app\controllers\API\AuthController;
 use app\controllers\API\FileController;
@@ -14,6 +15,8 @@ View::defaultStyles([
     '/css/app.css',
     '/css/header.css',
 ]);
+
+Router::get('/lang/:lang', Locale::class . '@Router');
 
 Router::get('/some/url/:param1/:param2', function ($req) {
     View::render('test', $req->params);
