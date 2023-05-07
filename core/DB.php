@@ -42,7 +42,7 @@ class DB
     public function where($template, $params = [])
     {
         $this->sql .= " WHERE $template";
-        $this->params = $params;
+        $this->params = array_merge($this->params, $params);
         return $this;
     }
 

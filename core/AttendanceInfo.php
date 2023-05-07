@@ -30,41 +30,43 @@ class AttendanceInfo
 
     static public function countUser()
     {
-        /*if (
-            (new Statistics)->select('username')->where('username = :u', [
-                ':u' => $_SESSION['user']
-            ])->run()
-        ) {
-            $count = (new Statistics)->select('count')->where('username = :u', [
-                ':u' => $_SESSION['user']
-            ])->run()[0]['count'];
-            (new Statistics)->update([
-                'date' => date('Y-m-d', time()),
-                'count' => $count + 1
-            ])->where('username = :u', [
-                    ':u' => $_SESSION['user']
+        if (isset($_SESSION['user'])) {
+            if (
+                (new Statistics)->select('username')->where('username = :username', [
+                    ':username' => $_SESSION['user']['name']
+                ])->run()
+            ) {
+                $count = (new Statistics)->select('count')->where('username = :username', [
+                    ':username' => $_SESSION['user']['name']
+                ])->run()[0]['count'];
+                (new Statistics)->update([
+                    'last_visit_date' => date('Y-m-d', time()),
+                    'count' => ($count + 1)
+                ])->where('username = :username', [
+                        ':username' => $_SESSION['user']['name']
+                    ])->run();
+            } else {
+                (new Statistics)->insert([
+                    'username' => $_SESSION['user']['name'],
+                    'last_visit_date' => date('Y-m-d', time()),
+                    'count' => 1
                 ])->run();
-        } else {
-            (new Statistics)->insert([
-                'username' => $_SESSION['user'],
-                'last_visit_date' => date('Y-m-d', time()),
-                'count' => 1
-            ])->run();
-        }*/
+            }
 
-        $visitData = (new Statistics)->select()->run();
-        $visitInfo = '';
+            $visitData = (new Statistics)->select()->run();
+            $visitInfo = '';
 
-        /*foreach ($visitData as $visit) {
-            $visitInfo +=
-                'User: ' . $visit['username'] .
-                ' | Last visit: ' . $visit['last_visit_date'] .
-                ' | Count: ' . $visit['count'] . "\n";
-        }*/
+            foreach ($visitData as $visit) {
+                $visitInfo = $visitInfo .
+                    'User: ' . $visit['username'] .
+                    ' | Last visit: ' . $visit['last_visit_date'] .
+                    ' | Count: ' . $visit['count'] . "\n";
+            }
 
-        $fileDirectory = $_ENV['ROOT_PATH'] . 'info' . DIRECTORY_SEPARATOR . 'visits.txt';
+            $fileDirectory = $_ENV['ROOT_PATH'] . 'info' . DIRECTORY_SEPARATOR . 'visits.txt';
 
-        file_put_contents($fileDirectory, "");
-        file_put_contents($fileDirectory, $visitInfo);
+            file_put_contents($fileDirectory, '');
+            file_put_contents($fileDirectory, $visitInfo);
+        }
     }
 }

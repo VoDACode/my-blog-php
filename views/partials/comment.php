@@ -1,7 +1,7 @@
 <?
 
-use \core\View;
 use \core\Locale;
+
 ?>
 <div class="item" comment-id="<?= $comment['id'] ?>">
     <div class="post">

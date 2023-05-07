@@ -14,6 +14,7 @@ View::layout('partials.layout');
 View::defaultStyles([
     '/css/app.css',
     '/css/header.css',
+    '/css/footer.css'
 ]);
 
 Router::get('/lang/:lang', Locale::class . '@Router');

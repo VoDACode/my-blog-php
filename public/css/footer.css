@@ -1,0 +1,15 @@
+.foot-content {
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    margin-top: 50px;
+}
+
+.logs_txt_display {
+    font-size: 12px;
+    background-color: aquamarine;
+}
+
+.visits_txt_display {
+    font-size: 20px;
+    background-color: blanchedalmond;
+}
