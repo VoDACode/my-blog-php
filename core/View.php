@@ -27,53 +27,11 @@ class View
     {
         $view_name = str_replace('.', DIRECTORY_SEPARATOR, $view_name);
 
-        if ($data != null) {
-            extract($data);
-        }
-
-        $styles = self::$default_styles;
-
-        if (isset($data['styles']) && is_array($data['styles'])) {
-            foreach ($data['styles'] as $style) {
-                if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . $style)) {
-                    throw new \Exception('Style file not found: ' . $style);
-                }
-                $styles .='<link rel="stylesheet" href="/public' . $style . '">';
-            }
-        }
-
-        if (isset($data['preload_scripts']) && is_array($data['preload_scripts'])) {
-            $preload_scripts = '';
-            foreach ($data['preload_scripts'] as $script) {
-                if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . $script)) {
-                    throw new \Exception('Script file not found: ' . $script);
-                }
-                $preload_scripts .='<script src="/public' . $script . '"></script>';
-            }
-        }
-
-        if (isset($data['after_load_scripts']) && is_array($data['after_load_scripts'])) {
-            $after_load_scripts = '';
-            foreach ($data['after_load_scripts'] as $script) {
-                if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . $script)) {
-                    throw new \Exception('Script file not found: ' . $script);
-                }
-                $after_load_scripts .=  '<script src="/public' . $script . '"></script>';
-            }
-        }
-
-        $title = $data['title'] ?? 'Some title';
+        $data = View::modifyDefaultParameters($data);
+        extract($data);
 
         if (self::$layout != '') {
             $render = self::getPath($view_name);
-            extract(
-                [
-                    'styles' => $styles ?? '',
-                    'preload_scripts' => $preload_scripts ?? '',
-                    'after_load_scripts' => $after_load_scripts ?? '',
-                    'title' => $title,
-                ]
-            );
             include self::getPath(self::$layout);
         } else {
             include self::getPath($view_name);
@@ -84,6 +42,7 @@ class View
     {
         $view_name = str_replace('.', DIRECTORY_SEPARATOR, $view_name);
         if ($data != null) {
+            $data = View::modifyDefaultParameters($data);
             extract($data);
         }
         include self::getPath($view_name);
@@ -99,5 +58,46 @@ class View
     {
         $view_name = str_replace('.', DIRECTORY_SEPARATOR, $view_name);
         return __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $view_name . '.php';
+    }
+
+    static private function modifyDefaultParameters($data){
+        $styles = self::$default_styles;
+
+        if (isset($data['styles']) && is_array($data['styles'])) {
+            foreach ($data['styles'] as $style) {
+                if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . $style)) {
+                    throw new \Exception('Style file not found: ' . $style);
+                }
+                $styles .='<link rel="stylesheet" href="/public' . $style . '">';
+            }
+        }
+
+        $preload_scripts = '';
+        if (isset($data['preload_scripts']) && is_array($data['preload_scripts'])) {
+            foreach ($data['preload_scripts'] as $script) {
+                if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . $script)) {
+                    throw new \Exception('Script file not found: ' . $script);
+                }
+                $preload_scripts .='<script src="/public' . $script . '"></script>';
+            }
+        }
+
+        $after_load_scripts = '';
+        if (isset($data['after_load_scripts']) && is_array($data['after_load_scripts'])) {
+            foreach ($data['after_load_scripts'] as $script) {
+                if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . $script)) {
+                    throw new \Exception('Script file not found: ' . $script);
+                }
+                $after_load_scripts .=  '<script src="/public' . $script . '"></script>';
+            }
+        }
+
+        $title = $data['title'] ?? 'Some title';
+
+        $data['styles'] = $styles;
+        $data['preload_scripts'] = $preload_scripts;
+        $data['after_load_scripts'] = $after_load_scripts;
+        $data['title'] = $title;
+        return $data;
     }
 }

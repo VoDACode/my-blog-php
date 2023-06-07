@@ -1,3 +1,2 @@
-User: voda | Last visit: 2023-05-07 | Count: 37
-User: test-2 | Last visit: 2023-05-07 | Count: 20
-User: test-1 | Last visit: 2023-05-07 | Count: 178
+User: voda | Last visit: 2023-05-18 | Count: 482
+User: oleg | Last visit: 2023-05-18 | Count: 34

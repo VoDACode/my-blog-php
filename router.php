@@ -7,24 +7,27 @@ use core\Locale;
 use app\controllers\API\UserController;
 use app\controllers\API\AuthController;
 use app\controllers\API\FileController;
+use app\controllers\API\PhotoGalleryApiController;
+use app\controllers\Http\PhotoGalleryController;
 use app\controllers\Http\PostController;
 use app\providers\User;
 
 View::layout('partials.layout');
 View::defaultStyles([
     '/css/app.css',
-    '/css/header.css',
-    '/css/footer.css'
+    '/css/header.css'
 ]);
 
 Router::get('/lang/:lang', Locale::class . '@Router');
 
-Router::get('/some/url/:param1/:param2', function ($req) {
-    View::render('test', $req->params);
-});
-
 Router::any('/api/users', UserController::class);
 Router::any('/api/auth', AuthController::class);
+
+Router::get("/test/lw_1", function ($req) {
+    View::render('lw_1', [
+        'params' => $req->params
+    ]);
+});
 
 Router::get("/registration", function ($req) {
     View::render('registration', [
@@ -60,6 +63,13 @@ Router::get("/", PostController::class . '@index');
 Router::any("/posts", PostController::class);
 
 Router::get("/fs", FileController::class);
+
+Router::get("/photo-gallery", PhotoGalleryController::class);
+
+Router::any("/api/photo-gallery", PhotoGalleryApiController::class);
+
+Router::get("/api/photo-gallery/file", PhotoGalleryApiController::class.'@getFile');
+Router::post("/api/photo-gallery/delete", PhotoGalleryApiController::class.'@deleteFile');
 
 Router::any('/test/post', function ($req) {
     View::render('posts', [

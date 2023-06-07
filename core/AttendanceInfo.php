@@ -10,9 +10,9 @@ class AttendanceInfo
     {
         $agent = $_SERVER['HTTP_USER_AGENT'];
         $uri = $_SERVER['REQUEST_URI'];
-        $user = $_SERVER['PHP_AUTH_USER'];
+        $user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : 'null';
         $ip = $_SERVER['REMOTE_ADDR'];
-        $ref = $_SERVER['HTTP_REFERER'];
+        $ref = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
         $dtime = date('r');
 
         if (!$ref) {

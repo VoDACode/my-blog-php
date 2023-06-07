@@ -27,7 +27,7 @@ class PostController extends BaseController
         $posts = $this->model->all();
         foreach ($posts as $key => $post) {
             $files = $fileModel->select()->where('post_id = :post_id', [
-                'post_id' => $post['id']
+                ':post_id' => $post['id']
             ])->run();
 
             // $file['type'] --> image/png
@@ -41,7 +41,7 @@ class PostController extends BaseController
             });
 
             $posts[$key]['user'] = $userModel->select()->where('id = :id', [
-                'id' => $post['user_id']
+                ':id' => $post['user_id']
             ])->run()[0];
 
             $posts[$key]['comments'] = [];
@@ -101,7 +101,7 @@ class PostController extends BaseController
                 'key' => $key
             ])->run();
         }
-        //$this->Redirect('/');
+        $this->Redirect('/');
     }
 
     // TODO: ITS TEST METHOD
@@ -111,13 +111,13 @@ class PostController extends BaseController
         $this->model->delete()->where('id = :id', [':id' => $id])->run();
         $fileModel = new File();
         $files = $fileModel->select()->where('post_id = :post_id', [
-            'post_id' => $id
+            ':post_id' => $id
         ])->run();
         foreach($files as $file){
             FileStorage::delete($file['key'].DIRECTORY_SEPARATOR.$file['name']);
         }
         $fileModel->delete()->where('post_id = :post_id', [
-            'post_id' => $id
+            ':post_id' => $id
         ])->run();
         $this->Ok();
     }

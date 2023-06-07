@@ -9,8 +9,7 @@ class DB
     private $params = [];
     public $table = '';
     public $fields = [];
-
-    public $timestamps = false;
+    
 
     public function __construct()
     {
@@ -142,25 +141,6 @@ class DB
             $this->params = [];
             return $this->connection->lastInsertRowID();
         }
-    }
-
-    public function count($where = null)
-    {
-        $this->sql = "SELECT COUNT(*) FROM $this->table";
-        if ($where != null) {
-            $this->sql .= " WHERE $where";
-        }
-        $stmt = $this->connection->prepare($this->sql);
-        $result = $stmt->execute();
-        if ($this->connection->lastErrorCode() != 0) {
-            throw new \Exception($this->connection->lastErrorMsg());
-        }
-        $data = [];
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            $data[] = $row;
-        }
-        $this->sql = '';
-        return $data[0]['COUNT(*)'];
     }
 
     public function createTable()

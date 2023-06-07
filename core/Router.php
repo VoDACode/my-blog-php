@@ -167,14 +167,18 @@ class RouteRecord
             $path = explode('@', $callback);
             $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $this->parseUrl($_SERVER['REQUEST_URI']), getallheaders());
             if (count($path) == 1) {
+                // controller
                 $this->callback = $path[0];
             } else {
+                // controller@method
                 $this->callback = [new $path[0]($request), $path[1]];
             }
-        } else if (is_callable($callback))
+        } else if (is_callable($callback)){
+            // function
             $this->callback = $callback;
-        else
+        }else{
             throw new \Exception('Invalid callback');
+        }
     }
 
     public function run()
@@ -190,6 +194,7 @@ class RouteRecord
             if (is_callable($this->callback) || is_array($this->callback)) {
                 call_user_func($this->callback, $request);
             } else if (is_string($this->callback)) {
+                // create controller
                 $controller = new $this->callback($request);
                 $action = str_replace($this->pattern, '', $request_url);
                 $funcNameAndParams = explode('/', $action); {
@@ -205,14 +210,6 @@ class RouteRecord
                     $action = $funcNameAndParams;
                 } else {
                     $action = $funcNameAndParams[0];
-                }
-                $urlParams = [];
-                {
-                    $tmp = explode('?', $action);
-                    if (count($tmp) > 1) {
-                        $action = $tmp[0];
-                        $urlParams = explode('&', $tmp[1]);
-                    }
                 }
                 $methods = get_class_methods($controller);
                 if (in_array($action, $methods) == false) {
@@ -254,9 +251,24 @@ class RouteRecord
     private function parseUrl($requestUrl)
     {
         $patternParts = explode('/', $this->pattern);
-        $requestUrlParts = explode('/', $requestUrl);
 
         $params = [];
+
+        // parse get params
+        $tmp = explode('?', $requestUrl);
+        if (count($tmp) > 1) {
+            $requestUrl = $tmp[0];
+            $getParams = explode('&', $tmp[1]);
+            foreach ($getParams as $key => $value) {
+                $tmp = explode('=', $value);
+                if (count($tmp) > 1) {
+                    $params[$tmp[0]] = $tmp[1];
+                }
+            }
+        }
+
+        $requestUrlParts = explode('/', $requestUrl);
+
         for ($i = 0; $i < count($patternParts); $i++) {
             $patternPart = $patternParts[$i];
             $requestPart = isset($requestUrlParts[$i]) ? $requestUrlParts[$i] : null;

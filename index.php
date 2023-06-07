@@ -6,11 +6,6 @@ loader();
 
 use core\Router;
 use core\View;
-use core\AttendanceInfo;
-
-// Write info about visiting to 'info' folder
-AttendanceInfo::writeGeneral();
-AttendanceInfo::countUser();
 
 // This is the main function. It runs the router and renders the 404 page if the router returns false and the 404 view exists.
 if(Router::run() == false && View::hasView('404')){
