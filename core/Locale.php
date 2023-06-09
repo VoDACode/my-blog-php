@@ -63,6 +63,6 @@ class Locale
         if (isset($request->params['lang'])) {
             self::changeLang($request->params['lang']);
         }
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        $request->goToBack();
     }
 }

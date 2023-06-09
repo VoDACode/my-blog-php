@@ -14,11 +14,12 @@ class PhotoGalleryApiController extends BaseController
         $this->model = new \app\providers\Image();
     }
 
-    public function add(){
+    public function add()
+    {
         $this->POST();
 
         $fileCount = count($_FILES['file']['name']);
-        for($i = 0; $i < $fileCount; $i++){
+        for ($i = 0; $i < $fileCount; $i++) {
             $file = [
                 'name' => $_FILES['file']['name'][$i],
                 'type' => $_FILES['file']['type'][$i],
@@ -31,33 +32,34 @@ class PhotoGalleryApiController extends BaseController
 
             $allowed = ['jpg', 'jpeg', 'png'];
 
-            if(in_array($fileActualExt, $allowed)){
-                if($file['error'] === 0){
+            if (in_array($fileActualExt, $allowed)) {
+                if ($file['error'] === 0) {
                     // 100 MB
-                    if($file['size'] < 107374182400){
+                    if ($file['size'] < 107374182400) {
                         $id = $this->model->insert([
                             'name' => $file['name'],
                             'size' => $file['size']
                         ])->run();
-                        
+
                         FileStorage::upload($file, $id);
-                    }else{
+                    } else {
                         $this->BadRequest("Your file is too big!");
                     }
-                }else{
+                } else {
                     $this->BadRequest("There was an error uploading your file!");
                 }
-            }else{
+            } else {
                 $this->BadRequest("You cannot upload files of this type!");
             }
         }
         $this->Redirect('/photo-gallery');
     }
 
-    public function getFile(){
+    public function getFile()
+    {
         $this->GET();
 
-        if(!isset($this->request->body['id'])){
+        if (!isset($this->request->body['id'])) {
             $this->NotFound();
         }
 
@@ -67,21 +69,17 @@ class PhotoGalleryApiController extends BaseController
             ':id' => $id
         ])->run()[0];
 
-        $fileExt = explode('.', $image['name']);
-        $fileActualExt = strtolower(end($fileExt));
         header('Content-Type: image/jpeg');
-        header('Content-Length: '.$image['size']);
+        header('Content-Length: ' . $image['size']);
 
-        FileStorage::show($image['id'].DIRECTORY_SEPARATOR.$image['name']);
+        FileStorage::show($image['id'] . DIRECTORY_SEPARATOR . $image['name']);
     }
 
-    public function deleteFile(){
-
+    public function deleteFile()
+    {
         $this->POST();
 
-        var_dump($this->request->body);
-
-        if(!isset($this->request->body['id'])){
+        if (!isset($this->request->body['id'])) {
             $this->NotFound();
         }
 
@@ -95,7 +93,7 @@ class PhotoGalleryApiController extends BaseController
             ':id' => $id
         ])->run();
 
-        FileStorage::delete($image['id'].DIRECTORY_SEPARATOR.$image['name']);
+        FileStorage::delete($image['id'] . DIRECTORY_SEPARATOR . $image['name']);
 
         $this->Redirect('/photo-gallery');
     }

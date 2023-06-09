@@ -3,14 +3,14 @@
 use \core\Locale;
 
 ?>
-<div class="item" comment-id="<?= $comment['id'] ?>">
+<div class="item" id="comment-<?= $comment['id'] ?>">
     <div class="post">
         <div class="vote">
-            <div class="upvote"></div>
+            <a class="upvote" selected="<?= $comment['my_rating'] == 1 ? true : false ?>" href="/api/comment/rating?rating=<?= $comment['my_rating'] == 1 ? 0 : 1 ?>&comment_id=<?= $comment['id'] ?>"></a>
             <div class="rating">
                 <p><?= $comment['rating'] ?></p>
             </div>
-            <div class="downvote"></div>
+            <a class="downvote" selected="<?= $comment['my_rating'] == -1 ? true : false ?>" href="/api/comment/rating?rating=<?= $comment['my_rating'] == -1 ? 0 : -1 ?>&comment_id=<?= $comment['id'] ?>"></a>
         </div>
         <div>
             <div class="header">
@@ -24,7 +24,7 @@ use \core\Locale;
                         <? } ?>
                     </div>
                     <div class="post">
-                        <p><?= Locale::get('comment.published') ?>: <?= $comment['date'] ?></p>
+                        <p><?= Locale::get('comment.published') ?>: <?= $comment['created_at'] ?></p>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@ use \core\Locale;
     </div>
     <div class="answers">
         <div class="content">
-            <? if ($comment['has_replies'] == true) { ?>
+            <? if (isset($comment['has_replies']) && $comment['has_replies'] == true) { ?>
                 <span class="create-reply"><?= Locale::get('comment.show-more') ?>...</span><br />
             <? } ?>
             <span class="create-reply"><?= Locale::get('comment.reply') ?>...</span>

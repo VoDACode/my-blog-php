@@ -13,6 +13,10 @@ main {
 
 .post-box {
     position: relative;
+}
+
+.post-box > .item{
+    position: relative;
     width: calc(var(--img-max-size) + 65px);
     background-color: #fff;
     margin: 10px 0;
@@ -21,7 +25,7 @@ main {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.post-box>.post {
+.post-box > .item .post {
     display: grid;
     grid-template-columns: auto 1fr;
 }
@@ -67,6 +71,16 @@ main {
     content: url("/public/img/up-arrow.png");
     rotate: 180deg;
 }
+.vote>.upvote[selected="1"] {
+    content: url("/public/img/up-arrow-dark.png");
+}
+
+.vote>.downvote[selected="1"] {
+    content: url("/public/img/up-arrow-dark.png");
+    rotate: 180deg;
+}
+
+
 
 .vote>.rating p {
     margin: 0;
@@ -100,11 +114,13 @@ main {
     height: calc(var(--img-max-size) * 0.75);
     background-color: #b3b3b335;
     border-radius: 5px;
+    justify-content: center;
 }
 
 .selected-image img {
     border-radius: 5px;
-    width: var(--img-max-size);
+    width: 525px;
+    height: 525px;
 }
 
 .imgs{

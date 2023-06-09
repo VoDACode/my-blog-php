@@ -13,6 +13,7 @@ Auth::needAdmin();
         <div class="user-list-header__email user-list-header-prop"><?= Locale::get('users-page.table.email') ?></div>
         <div class="user-list-header__can-publish-posts user-list-header-prop"><?= Locale::get('users-page.table.can-publish-posts') ?></div>
         <div class="user-list-header__created-at user-list-header-prop"><?= Locale::get('users-page.table.created-at') ?></div>
+        <div class="user-list-header__updated-at user-list-header-prop"><?= Locale::get('users-page.table.updated-at') ?></div>
         <div class="user-list-header__actions user-list-header-prop"><?= Locale::get('users-page.table.actions') ?></div>
     </div>
     <? foreach ($users as $user) : ?>
@@ -29,19 +30,21 @@ Auth::needAdmin();
             <div class="user-record__created-at user-record-prop">
                 <?= $user['created_at'] ?>
             </div>
+            <div class="user-record__updated-at user-record-prop">
+                <?= $user['updated_at'] ?>
+            </div>
             <div class="user-record__actions user-record-prop">
                 <div class="buttons">
                     <div class="user-record-button-cont">
-                        <a class="edit-user-link user-record-button" href="user?id=<?= $user['id'] ?>"><?= Locale::get('users-page.table.edit') ?></a>
+                        <a class="edit-user-link user-record-button" href="users/<?= $user['id'] ?>/edit"><?= Locale::get('users-page.table.edit') ?></a>
                     </div>
                     <? if ($user['id'] != 1) : ?>
                         <div class="user-record-button-cont">
-                            <a class="delete-user-link user-record-button" href="user?id=<?= $user['id'] ?>&event=delete"><?= Locale::get('users-page.table.delete') ?></a>
+                            <a class="delete-user-link user-record-button" href="/api/users/<?= $user['id'] ?>/delete"><?= Locale::get('users-page.table.delete') ?></a>
                         </div>
                     <? endif; ?>
                 </div>
             </div>
-            <div></div>
         </div>
     <? endforeach; ?>
 </div>

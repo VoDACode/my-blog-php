@@ -61,6 +61,8 @@ class User extends DB implements IAuthUser
 
     public function get()
     {
+        if (!isset($_SESSION['user']))
+            return false;
         return $_SESSION['user'];
     }
 

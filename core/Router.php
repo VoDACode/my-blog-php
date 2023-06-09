@@ -211,6 +211,14 @@ class RouteRecord
                 } else {
                     $action = $funcNameAndParams[0];
                 }
+                $urlParams = [];
+                {
+                    $tmp = explode('?', $action);
+                    if (count($tmp) > 1) {
+                        $action = $tmp[0];
+                        $urlParams = explode('&', $tmp[1]);
+                    }
+                }
                 $methods = get_class_methods($controller);
                 if (in_array($action, $methods) == false) {
                     if (in_array('index', $methods) == false)

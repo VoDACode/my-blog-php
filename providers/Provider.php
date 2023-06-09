@@ -11,47 +11,56 @@ abstract class Provider
     protected $columns = [];
     protected $table = "";
 
-    public static function all(){
+    public static function all()
+    {
         $provider = new static();
         return $provider->selectSQL();
     }
 
-    public static function find($id){
+    public static function find($id)
+    {
         $provider = new static();
-        return $provider->selectSQL('id = '.$id);
+        return $provider->selectSQL('id = ' . $id);
     }
 
-    public static function create($data){
+    public static function create($data)
+    {
         $provider = new static();
         return $provider->insertSQL($data);
     }
 
-    public static function update($id, $data){
+    public static function update($id, $data)
+    {
         $provider = new static();
-        return $provider->updateSQL('id = '.$id, $data);
+        return $provider->updateSQL('id = ' . $id, $data);
     }
 
-    public static function updateWhere($where, $data){
+    public static function updateWhere($where, $data)
+    {
         $provider = new static();
         return $provider->updateSQL($where, $data);
     }
 
-    public static function delete($id){
+    public static function delete($id)
+    {
         $provider = new static();
-        return $provider->deleteSQL('id = '.$id);
+        return $provider->deleteSQL('id = ' . $id);
     }
 
-    public static function where($column, $value){
+    public static function where($column, $value)
+    {
         $provider = new static();
         return $provider->selectSQL(null, $column, $value);
     }
 
-    public static function select($where, $column, $values){
+    public static function select($where, $column, $values)
+    {
         $provider = new static();
         return $provider->selectSQL($where, $column, $values);
     }
 
-    public static function deleteWhere($where){
+    public static function deleteWhere($where)
+    {
         $provider = new static();
         return $provider->deleteSQL($where);
     }
@@ -96,7 +105,7 @@ abstract class Provider
         $sql .= " VALUES (";
         $values = [];
         foreach ($columns as $column) {
-            if($this->columns[$column]['type'] == 'TEXT')
+            if ($this->columns[$column]['type'] == 'TEXT')
                 $values[] = "'" . $data[$column] . "'";
             else
                 $values[] = $data[$column];
@@ -143,7 +152,7 @@ abstract class Provider
         foreach ($data as $column => $value) {
             if ($column == 'id') continue;
             if (!in_array($column, $this->getColumns())) continue;
-            if($this->columns[$column]['type'] == 'TEXT')
+            if ($this->columns[$column]['type'] == 'TEXT')
                 $columns[] = "$column = '" . $data[$column] . "'";
             else
                 $columns[] = "$column = " . $data[$column];
@@ -171,31 +180,39 @@ abstract class Provider
         return $deletedRow;
     }
 
-    public function createTable(){
-        $db = new SQLite3($_ENV['DB_NAME']);
-        $table = $this->getTable();
-        $sql = "CREATE TABLE IF NOT EXISTS $table (";
-        $columns = [];
-        foreach ($this->columns as $column => $options) {
-            $col = $column . " " . $options['type'];
-            if (isset($options['primary']) && $options['primary'] == true) {
-                $col .= " PRIMARY KEY";
+    public function createTable()
+    {
+        $sql = "";
+        try {
+            $db = new SQLite3($_ENV['DB_NAME']);
+            $table = $this->getTable();
+            $sql = "CREATE TABLE IF NOT EXISTS $table (";
+            $columns = [];
+            foreach ($this->columns as $column => $options) {
+                $col = $column . " " . $options['type'];
+                if (isset($options['primary']) && $options['primary'] == true) {
+                    $col .= " PRIMARY KEY";
+                }
+                if (isset($options['autoincrement']) && $options['autoincrement'] == true) {
+                    $col .= " AUTOINCREMENT";
+                }
+                if (isset($options['default'])) {
+                    $col .= " DEFAULT " . $options['default'];
+                }
+                if (isset($options['unique']) && $options['unique'] == true) {
+                    $col .= " UNIQUE";
+                }
+                $columns[] = $col;
             }
-            if (isset($options['autoincrement']) && $options['autoincrement'] == true) {
-                $col .= " AUTOINCREMENT";
-            }
-            if (isset($options['default'])) {
-                $col .= " DEFAULT " . $options['default'];
-            }
-            if (isset($options['unique']) && $options['unique'] == true) {
-                $col .= " UNIQUE";
-            }
-            $columns[] = $col;
+            $sql .= implode(', ', $columns);
+            $sql .= ")";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $db->close();
+        } catch (\Exception $e) {
+            echo 'SQL: ' . $sql . '<br>';
+            echo $e->getMessage();
+            die();
         }
-        $sql .= implode(', ', $columns);
-        $sql .= ")";
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $db->close();
     }
 }

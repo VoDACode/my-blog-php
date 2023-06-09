@@ -6,23 +6,23 @@
 
 .user-list {
     position: relative;
-    width: 1200px;
+    width: 80%;
     margin-left: 50%;
     transform: translateX(-50%);
 }
 
 .user-record {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     width: 100%;
     border: solid 3px rgb(28, 28, 28);
     margin-top: 20px;
-    padding: 15px;
+    padding-block: 5px;
 }
 
 .user-list-header {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     width: 100%;
     margin-top: 20px;
     padding-inline: 15px;
@@ -41,12 +41,19 @@
     justify-content: center;
     align-items: center;
     font-size: 20px;
+    height: 100%;
 }
 
 .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+}
+
+.user-record-button-cont {
+    margin-inline: 8px;
+    margin-block: 10px;
 }
 
 .user-record-button {
@@ -55,7 +62,6 @@
     color: white;
     padding-inline: 20px;
     padding-block: 7px;
-    margin-inline: 3px;
 }
 
 .edit-user-link {

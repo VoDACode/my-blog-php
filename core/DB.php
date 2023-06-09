@@ -9,7 +9,7 @@ class DB
     private $params = [];
     public $table = '';
     public $fields = [];
-    
+
 
     public function __construct()
     {
@@ -24,10 +24,11 @@ class DB
         $this->connection->close();
     }
 
-    public static function all(){
+    public static function all()
+    {
         $db = new static();
         return $db->select()->run();
-    } 
+    }
 
     public function select($columns = '*')
     {
@@ -93,7 +94,7 @@ class DB
 
     public function orderBy($column, $order = 'ASC')
     {
-        $this->sql .= " ORDER BY $column $order";
+        $this->sql .= " ORDER BY $column $order ";
         return $this;
     }
 
@@ -119,7 +120,7 @@ class DB
     {
         if (empty($this->sql)) {
             return [];
-        }    
+        }
         $stmt = $this->connection->prepare($this->sql);
         foreach ($this->params as $key => $value) {
             $stmt->bindValue($key, $value);
@@ -128,7 +129,7 @@ class DB
         if ($this->connection->lastErrorCode() != 0) {
             throw new \Exception($this->connection->lastErrorMsg());
         }
-        if(strpos($this->sql, 'SELECT') !== false) {
+        if (strpos($this->sql, 'SELECT') !== false) {
             $data = [];
             while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                 $data[] = $row;
@@ -145,37 +146,43 @@ class DB
 
     public function createTable()
     {
-        $this->sql = "CREATE TABLE IF NOT EXISTS $this->table (";
-        $i = 0;
-        foreach ($this->fields as $key => $value) {
-            $this->sql .= "$key ";
-            $this->sql .= $value['type'];
+        try {
+            $this->sql = "CREATE TABLE IF NOT EXISTS $this->table (";
+            $i = 0;
+            foreach ($this->fields as $key => $value) {
+                $this->sql .= "$key ";
+                $this->sql .= $value['type'];
 
-            if (isset($value['primary']) && $value['primary'] == true) {
-                $this->sql .= ' PRIMARY KEY';
+                if (isset($value['primary']) && $value['primary'] == true) {
+                    $this->sql .= ' PRIMARY KEY';
+                }
+                if (isset($value['autoincrement']) && $value['autoincrement'] == true) {
+                    $this->sql .= ' AUTOINCREMENT';
+                }
+                if (isset($value['default'])) {
+                    $this->sql .= " DEFAULT $value[default]";
+                }
+                if (isset($value['notnull']) && $value['notnull'] == true) {
+                    $this->sql .= ' NOT NULL';
+                }
+                if (isset($value['unique']) && $value['unique'] == true) {
+                    $this->sql .= ' UNIQUE';
+                }
+                if ($i < count($this->fields) - 1) {
+                    $this->sql .= ', ';
+                }
+                $i++;
             }
-            if (isset($value['autoincrement']) && $value['autoincrement'] == true) {
-                $this->sql .= ' AUTOINCREMENT';
+            $this->sql .= ')';
+            $this->connection->exec($this->sql);
+            if ($this->connection->lastErrorCode() != 0) {
+                throw new \Exception($this->connection->lastErrorMsg());
             }
-            if (isset($value['default'])) {
-                $this->sql .= " DEFAULT $value[default]";
-            }
-            if(isset($value['notnull']) && $value['notnull'] == true) {
-                $this->sql .= ' NOT NULL';
-            }
-            if (isset($value['unique']) && $value['unique'] == true) {
-                $this->sql .= ' UNIQUE';
-            }
-            if ($i < count($this->fields) - 1) {
-                $this->sql .= ', ';
-            }
-            $i++;
+            return $this;
+        } catch (\Exception $e) {
+            echo 'SQL: ' . $this->sql . '<br>';
+            echo $e->getMessage();
+            die();
         }
-        $this->sql .= ')';
-        $this->connection->exec($this->sql);
-        if ($this->connection->lastErrorCode() != 0) {
-            throw new \Exception($this->connection->lastErrorMsg());
-        }
-        return $this;
     }
 }

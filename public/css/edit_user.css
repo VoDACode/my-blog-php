@@ -1,0 +1,43 @@
+.page-header {
+    margin-top: 15px;
+    font-size: 36px;
+    text-align: center;
+}
+
+.user-info {
+    width: fit-content;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+.text-input-cont, .checkbox-input-cont, .confirm-panel {
+    margin-top: 25px;
+}
+
+.input-title {
+    font-size: 20px;
+}
+
+.publish-input {
+    margin-left: 5px;
+    width: 15px;
+    height: 15px;
+}
+
+.confirm-panel button {
+    font-size: 20px;
+    padding: 3px;
+}
+
+.canceling {
+    background-color: rgb(255, 215, 215);
+}
+
+.saving {
+    background-color: rgb(202, 255, 237);
+    margin-left: 10px;
+}
+
+input {
+    font-size: 20px;
+}

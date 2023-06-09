@@ -9,7 +9,15 @@ abstract class BaseController
 
     public function __construct(Request $request)
     {
+        if($request == null){
+            echo 'Request is null<br>';
+            echo $_SERVER['REQUEST_URI'].'<br>';
+            echo $_SERVER['REQUEST_METHOD'].'<br>';
+            echo 'Controller: '.get_class($this).'<br>';
+            die();
+        }
         $this->request = $request;
+        $this->httpUser = Auth::get();
     }
 
     protected function requireAuth()
@@ -20,7 +28,7 @@ abstract class BaseController
         }
         $user = $_ENV['AUTH_TOKEN_MODEL']::checkToken($token);
         $this->httpUser = Auth::get();
-        if ($user === false) {
+        if ($this->httpUser == false) {
             $this->Unauthorized();
         }
     }
@@ -140,6 +148,11 @@ abstract class BaseController
     protected function Redirect($url)
     {
         header('Location: ' . $url);
+        die();
+    }
+
+    protected function GoToBack(){
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         die();
     }
 

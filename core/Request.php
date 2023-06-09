@@ -14,6 +14,7 @@ class Request{
         $this->headers = $headers;
         if($method == 'POST' || $method == 'PUT' || $method == 'PATCH'){
             $this->body = $_POST;
+            $this->body = array_merge($this->body, $_GET);
         }else{
             $this->body = $_GET;
         }      
@@ -21,6 +22,11 @@ class Request{
 
     public function redirect($url){
         header('Location: ' . $url);
+        exit;
+    }
+
+    public function goToBack(){
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit;
     }
 }

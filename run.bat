@@ -1,1 +1,1 @@
-php -S localhost:8000 -t public/ index.php
+php -S 10.0.1.20:8000 -t public/ index.php

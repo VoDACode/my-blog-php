@@ -8,6 +8,7 @@ use app\controllers\API\UserController;
 use app\controllers\API\AuthController;
 use app\controllers\API\FileController;
 use app\controllers\API\PhotoGalleryApiController;
+use app\controllers\Http\CommentController;
 use app\controllers\Http\PhotoGalleryController;
 use app\controllers\Http\PostController;
 use app\providers\User;
@@ -45,6 +46,33 @@ Router::get("/login", function ($req) {
     ]);
 });
 
+Router::get("/users/:id/edit", function ($req) {
+    $model = new User();
+    $user = $model->select()->where('id = :id',[
+        ':id' => $req->params['id']
+    ])->run();
+    if(empty($user)){
+        $req->redirect('/users');
+    }
+    View::render('edit_user', [
+        'styles' => [
+            '/css/edit_user.css'
+        ],
+        'user' => $user[0]
+    ]);
+});
+
+Router::get("/users/:id/delete", function ($req) {
+    $model = new User();
+    $user = $model->select()->where('id = :id',[
+        ':id' => $req->params['id']
+    ])->run();
+    if(empty($user)){
+        $req->redirect('/users');
+    }
+    echo 'Delete user: ' . $user[0]['name'];
+});
+
 Router::get("/users", function ($req) {
     View::render('users', [
         'styles' => [
@@ -70,6 +98,8 @@ Router::any("/api/photo-gallery", PhotoGalleryApiController::class);
 
 Router::get("/api/photo-gallery/file", PhotoGalleryApiController::class.'@getFile');
 Router::post("/api/photo-gallery/delete", PhotoGalleryApiController::class.'@deleteFile');
+
+Router::any("/api/comment", CommentController::class);
 
 Router::any('/test/post', function ($req) {
     View::render('posts', [
