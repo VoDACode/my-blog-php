@@ -5,6 +5,7 @@
 
 .collection {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .collection-item {
@@ -43,4 +44,8 @@ input[type="hidden"] {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.photo-name {
+    text-align: center;
 }

@@ -25,6 +25,7 @@
                         <input type="hidden" name="id" value="<?= $image['id'] ?>">
                         <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
+                    <p class="photo-name"><?= $image['name'] ?></p>
                 </div>
             <? } ?>
         <? else : ?>
