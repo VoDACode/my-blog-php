@@ -18,12 +18,6 @@ class UserController extends \core\BaseController
         $this->SendJson($this->userProvider->select()->run());
     }
 
-    public function info(int $id)
-    {
-        $this->requireAuth();
-        echo json_encode($this->userProvider->select()->where("id = :id", [':id' => $id])->run());
-    }
-
     public function create()
     {
         $data = json_decode(file_get_contents('php://input'), true);
@@ -57,16 +51,16 @@ class UserController extends \core\BaseController
         $email = $this->request->body['email'];
         $can_make_post = $this->request->body['can_make_post'] == "on" ? 1 : 0;
 
-        $user = $this->userProvider->update([
+        $this->userProvider->update([
             'name' => $name,
             'email' => $email,
             'can_make_post' => $can_make_post
         ])->where("id = :id", [':id' => $id])->run();
         
-        $this->GoToBack();
+        $this->Redirect('/users');
     }
 
-    public function destroy()
+    public function delete()
     {
         $this->POST();
         $this->requireAuth();
@@ -74,5 +68,7 @@ class UserController extends \core\BaseController
         $id = $this->request->body['id'];
 
         $this->userProvider->delete()->where("id = :id", [':id' => $id])->run();
+
+        $this->Redirect('/users');
     }
 }

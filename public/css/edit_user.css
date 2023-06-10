@@ -10,16 +10,42 @@
     transform: translateX(-50%);
 }
 
-.text-input-cont, .checkbox-input-cont, .confirm-panel {
+.user-info-input {
+    display: flex;
+    margin-top: 30px;
+    flex-wrap: nowrap;
+}
+
+.titles, .inputs {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 100px;
+}
+
+.inputs {
+    margin-left: 20px;
+}
+
+.titles span {
+    display: block;
+}
+
+.inputs input {
+    display: block;
+}
+
+.confirm-panel {
     margin-top: 25px;
 }
 
 .input-title {
     font-size: 20px;
+    text-align: right;
 }
 
 .publish-input {
-    margin-left: 5px;
+    cursor: pointer;
+    margin-left: 10px;
     width: 15px;
     height: 15px;
 }
@@ -30,11 +56,13 @@
 }
 
 .canceling {
+    cursor: pointer;
     background-color: rgb(255, 215, 215);
 }
 
 .saving {
-    background-color: rgb(202, 255, 237);
+    cursor: pointer;
+    background-color: rgb(204, 255, 202);
     margin-left: 10px;
 }
 

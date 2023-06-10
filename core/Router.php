@@ -249,7 +249,7 @@ class RouteRecord
                         }
                     }
                 }
-                $controller->{$action}(...$params);
+                $controller->{$action}();
             }
             return true;
         }

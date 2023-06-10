@@ -36,12 +36,15 @@ Auth::needAdmin();
             <div class="user-record__actions user-record-prop">
                 <div class="buttons">
                     <div class="user-record-button-cont">
-                        <a class="edit-user-link user-record-button" href="users/<?= $user['id'] ?>/edit"><?= Locale::get('users-page.table.edit') ?></a>
+                        <a href="users/<?= $user['id'] ?>/edit">
+                            <button class="edit-user-link user-record-button"><?= Locale::get('users-page.table.edit') ?></button>
+                        </a>
                     </div>
                     <? if ($user['id'] != 1) : ?>
-                        <div class="user-record-button-cont">
-                            <a class="delete-user-link user-record-button" href="/api/users/<?= $user['id'] ?>/delete"><?= Locale::get('users-page.table.delete') ?></a>
-                        </div>
+                        <form class="user-record-button-cont" method="post" action="/api/users/delete">
+                            <input type="hidden" name="id" value="<?= $user['id'] ?>" />
+                            <button class="delete-user-link user-record-button" type="submit"><?= Locale::get('users-page.table.delete') ?></button>
+                        </form>
                     <? endif; ?>
                 </div>
             </div>

@@ -104,6 +104,12 @@ class DB
         return $this;
     }
 
+    public function offset(int $offset)
+    {
+        $this->sql .= " OFFSET $offset";
+        return $this;
+    }
+
     public function first()
     {
         $this->sql .= " LIMIT 1";

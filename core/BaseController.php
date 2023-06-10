@@ -156,7 +156,7 @@ abstract class BaseController
         die();
     }
 
-    private function sendResponse($content, $code = 200)
+    protected function sendResponse($content, $code = 200)
     {
         http_response_code($code);
         if (is_array($content) || is_object($content)) {

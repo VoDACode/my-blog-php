@@ -25,12 +25,15 @@ class PostController extends BaseController
 
     public function index()
     {
+        $offset = isset($this->request->body['offset']) ? $this->request->body['offset'] : 0;
+        $limit = isset($this->request->body['limit']) ? $this->request->body['limit'] : 5;
+
         $userModel = new User();
         $fileModel = new File();
         $commentModel = new Comment();
         $userPostRatingModel = new UserPostRating();
         $userCommentRatingModel = new UserCommentRating();
-        $posts = $this->model->select()->orderBy('created_at', 'DESC')->run();
+        $posts = $this->model->select()->orderBy('created_at', 'DESC')->limit($limit)->offset($offset)->run();
         foreach ($posts as $key => $post) {
             $files = $fileModel->select()->where('post_id = :post_id', [
                 ':post_id' => $post['id']
@@ -52,12 +55,17 @@ class PostController extends BaseController
 
             $posts[$key]['comments'] = $commentModel->select()->where('post_id = :post_id', [
                 ':post_id' => $post['id']
-            ])->run();
+            ])->orderBy('created_at', 'DESC')->limit(3)->run();
 
             foreach ($posts[$key]['comments'] as $commentKey => $comment) {
-                $posts[$key]['comments'][$commentKey]['user'] = $userModel->select()->where('id = :id', [
+                $user = $userModel->select()->where('id = :id', [
                     ':id' => $comment['user_id']
-                ])->run()[0];
+                ])->run();
+                if ($user != []) {
+                    $posts[$key]['comments'][$commentKey]['user'] = $user[0];
+                } else {
+                    $posts[$key]['comments'][$commentKey]['user'] = null;
+                }
                 $posts[$key]['comments'][$commentKey]['my_rating'] = 0;
                 if ($this->httpUser != false) {
                     $data = $userCommentRatingModel->select()->where('user_id = :user_id AND comment_id = :comment_id', [
@@ -81,15 +89,81 @@ class PostController extends BaseController
                 }
             }
         }
-        View::render('posts', [
-            'styles' => [
-                '/css/post.css'
+
+        if ($offset == 0) {
+            View::render('posts', [
+                'styles' => [
+                    '/css/post.css'
+                ],
+                'after_load_scripts' => [
+                    '/js/post.js'
+                ],
+                'posts' => $posts
+            ]);
+        } else {
+            foreach ($posts as $post) {
+                //echo '<pre>'.var_dump($post).'</pre><br>';
+                View::renderPartial('partials.post', ['post' => $post]);
+            }
+        }
+    }
+
+    public function getComments()
+    {
+        $this->GET();
+        $this->validate([
+            'post_id' => [
+                'required',
+                'min:0'
             ],
-            'after_load_scripts' => [
-                '/js/post.js'
-            ],
-            'posts' => $posts
+            'offset' => [
+                'required',
+                'min:0'
+            ]
         ]);
+
+        $post_id = $this->request->body['post_id'];
+        $offset = $this->request->body['offset'];
+        $limit = isset($this->request->body['limit']) ? $this->request->body['limit'] : 5;
+        if ($limit > 10) $limit = 10;
+
+        $post = $this->model->select()->where('id = :id', [
+            ':id' => $post_id
+        ])->run();
+        if ($post == []) {
+            $this->NotFound();
+        }
+        $post = $post[0];
+
+        $commentModel = new Comment();
+        $userModel = new User();
+
+        $comments = $commentModel->select()->where('post_id = :post_id', [
+            ':post_id' => $post_id
+        ])->orderBy('created_at', 'DESC')->limit($limit)->offset($offset)->run();
+
+        foreach ($comments as $key => $comment) {
+            $comments[$key]['user'] = $userModel->select()->where('id = :id', [
+                ':id' => $comment['user_id']
+            ])->run()[0];
+
+            $comments[$key]['my_rating'] = 0;
+
+            if ($this->httpUser != false) {
+                $userCommentRatingModel = new UserCommentRating();
+                $data = $userCommentRatingModel->select()->where('user_id = :user_id AND comment_id = :comment_id', [
+                    ':user_id' => $this->httpUser['id'],
+                    ':comment_id' => $comment['id']
+                ])->run();
+                if ($data != []) {
+                    $comments[$key]['my_rating'] = $data[0]['rating'];
+                }
+            }
+        }
+
+        foreach ($comments as $comment) {
+            View::renderPartial('partials.comment', ['comment' => $comment]);
+        }
     }
 
     public function create()
@@ -105,7 +179,7 @@ class PostController extends BaseController
                 'max:255'
             ],
             'content' => [
-                'max:2048'
+                'max:65535'
             ]
         ]);
         $id = $this->model->insert([
@@ -117,24 +191,26 @@ class PostController extends BaseController
 
         $fileCount = count($_FILES['file']['name']);
 
-        $fileModel = new File();
-        for ($i = 0; $i < $fileCount; $i++) {
-            $key = $this->getRandomString(32) . '_' . $i . $id;
-            $file = [
-                'name' => $_FILES['file']['name'][$i],
-                'type' => $_FILES['file']['type'][$i],
-                'tmp_name' => $_FILES['file']['tmp_name'][$i],
-                'error' => $_FILES['file']['error'][$i],
-                'size' => $_FILES['file']['size'][$i]
-            ];
-            FileStorage::upload($file, $key);
-            $fileModel->insert([
-                'name' => $file['name'],
-                'type' => $file['type'],
-                'size' => $file['size'],
-                'post_id' => $id,
-                'key' => $key
-            ])->run();
+        if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'][0])) {
+            $fileModel = new File();
+            for ($i = 0; $i < $fileCount; $i++) {
+                $key = $this->getRandomString(32) . '_' . $i . $id;
+                $file = [
+                    'name' => $_FILES['file']['name'][$i],
+                    'type' => $_FILES['file']['type'][$i],
+                    'tmp_name' => $_FILES['file']['tmp_name'][$i],
+                    'error' => $_FILES['file']['error'][$i],
+                    'size' => $_FILES['file']['size'][$i]
+                ];
+                FileStorage::upload($file, $key);
+                $fileModel->insert([
+                    'name' => $file['name'],
+                    'type' => $file['type'],
+                    'size' => $file['size'],
+                    'post_id' => $id,
+                    'key' => $key
+                ])->run();
+            }
         }
         $this->Redirect('/');
     }

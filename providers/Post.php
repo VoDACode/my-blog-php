@@ -22,7 +22,7 @@ class Post extends DB{
         'content' => [
             'type' => 'TEXT',
             'min' => 0,
-            'max' => 2048
+            'max' => 65535,
         ],
         'user_id' => [
             'type' => 'INTEGER',

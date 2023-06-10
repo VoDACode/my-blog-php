@@ -15,7 +15,7 @@ use \core\Locale;
         <div>
             <div class="header">
                 <div class="name" user-id="<?= $comment['user']['id'] ?>">
-                    <p><?= $comment['user']['name'] ?></p>
+                    <p><?= isset($comment['user']) ? $comment['user']['name'] : 'Anonim' ?></p>
                 </div>
                 <div class="date">
                     <div class="last-edit">
@@ -33,14 +33,6 @@ use \core\Locale;
                     <?= $comment['text'] ?>
                 </p>
             </div>
-        </div>
-    </div>
-    <div class="answers">
-        <div class="content">
-            <? if (isset($comment['has_replies']) && $comment['has_replies'] == true) { ?>
-                <span class="create-reply"><?= Locale::get('comment.show-more') ?>...</span><br />
-            <? } ?>
-            <span class="create-reply"><?= Locale::get('comment.reply') ?>...</span>
         </div>
     </div>
 </div>

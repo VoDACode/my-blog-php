@@ -21,88 +21,80 @@ use \core\Locale;
             <h1><?= Locale::get('posts.no-posts') ?></h1>
         </div>
     <? else : ?>
-        <div class="post-box">
+        <div class="post-box" id="posts">
             <? foreach ($posts as $post) { ?>
-                <div class="item">
-                    <div class="post" id="post-<?= $post['id'] ?>">
-                        <div class="vote">
-                            <a class="upvote" selected="<?= $post['my_rating'] == 1 ? true : false ?>" href="/posts/rating?rating=<?= $post['my_rating'] == 1 ? 0 : 1 ?>&post_id=<?= $post['id'] ?>"></a>
-                            <div class="rating">
-                                <p><?= $post['rating'] ?></p>
-                            </div>
-                            <a class="downvote" selected="<?= $post['my_rating'] == -1 ? true : false ?>" href="/posts/rating?rating=<?= $post['my_rating'] == -1 ? 0 : -1 ?>&post_id=<?= $post['id'] ?>"></a>
-                        </div>
-                        <div class="content">
-                            <div class="header">
-                                <h2 class="title"><?= $post['title'] ?></h2>
-                                <div class="date">
-                                    <div class="post">
-                                        <p><?= $post['created_at'] ?></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <? if (count($post['images']) > 0) { ?>
-                                <div class="imgs">
-                                    <div class="selected-image">
-                                        <img src="/fs/download?key=<?= $post['images'][0]['key'] ?>">
-                                    </div>
-                                    <div class="image-container">
-                                        <? foreach ($post['images'] as $image) { ?>
-                                            <div>
-                                                <img src="/fs/download?key=<?= $image['key'] ?>">
-                                            </div>
-                                        <? } ?>
-                                    </div>
-                                </div>
-                            <? } ?>
-                            <p>
-                                <?= $post['content'] ?>
-                            </p>
-                            <div class="files">
-                                <div class="list">
-                                    <? foreach ($post['files'] as $file) { ?>
-                                        <div class="file">
-                                            <div class="file-type">
-                                                <img src="<?= URL::asset('img/file.png') ?>">
-                                            </div>
-                                            <div class="name">
-                                                <a href="/fs/download?key=<?= $file['key'] ?>"><?= $file['name'] ?></a>
-                                            </div>
-                                            <div class="size">
-                                                <p><?
-                                                    if ($file['size'] < 1024) {
-                                                        echo $file['size'] . ' ' . Locale::get('posts.size.b');
-                                                    } else if ($file['size'] < 1048576) {
-                                                        echo round($file['size'] / 1024, 2) . ' ' . Locale::get('posts.size.kb');
-                                                    } else if ($file['size'] < 1073741824) {
-                                                        echo round($file['size'] / 1048576, 2) . ' ' . Locale::get('posts.size.mb');
-                                                    } else if ($file['size'] < 1099511627776) {
-                                                        echo round($file['size'] / 1073741824, 2) . ' ' . Locale::get('posts.size.gb');
-                                                    } else {
-                                                        echo round($file['size'] / 1099511627776, 2) . ' ' . Locale::get('posts.size.tb');
-                                                    }
-                                                    ?></p>
-                                            </div>
-                                        </div>
-                                    <? } ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="comments">
-                        <div class="create-comment">
-                            <? View::renderPartial('partials.comment-create-form', ['post_id' => $post['id']]) ?>
-                        </div>
-                        <? if ($post['can_have_comments'] == true) : ?>
-                            <div class="content">
-                                <? foreach ($post['comments'] as $comment) { ?>
-                                    <? View::renderPartial('partials.comment', ['comment' => $comment]) ?>
-                                <? } ?>
-                            </div>
-                        <? endif; ?>
-                    </div>
-                </div>
+                <? View::renderPartial('partials.post', ['post' => $post]) ?>
             <? } ?>
         </div>
+        <script>
+            (() => {
+                // scroll page event
+                var scrollPage = () => {
+                    var scroll = window.scrollY;
+                    var height = document.body.scrollHeight - window.innerHeight;
+                    var percent = scroll / height;
+                    if (percent > 0.8) {
+                        loadPosts();
+                    }
+                };
+                window.addEventListener('scroll', scrollPage);
+                // load posts
+                var offset = <?= count($posts) ?>;
+                var limit = 10;
+                var loading = false;
+                var havePosts = true;
+
+                var loadPosts = async () => {
+                    if (loading || !havePosts) {
+                        return;
+                    }
+                    loading = true;
+                    var response = await fetch('/posts?offset=' + offset + '&limit=' + limit);
+                    var posts = await response.text();
+                    if (posts == '') {
+                        havePosts = false;
+                        loading = false;
+                        return;
+                    }
+                    console.log("Loaded " + limit + " posts");
+                    offset += limit;
+                    document.getElementById('posts').innerHTML += posts;
+                    loading = false;
+                }
+            })();
+
+            var localData = {};
+
+            async function showMoreComments(postId, commentsCount) {
+                if(localData[postId] == null) {
+                    localData[postId] = {};
+                    localData[postId].offset = commentsCount;
+                    localData[postId].haveComments = true;
+                    localData[postId].loading = false;
+                }
+                if (localData[postId].haveComments == false || localData[postId].loading == true) {
+                    return;
+                }
+                localData[postId].loading = true;
+                var showMoreButton = document.getElementById('show-more-button-' + postId);
+                var commentBox = document.getElementById('comment-content-post-' + postId);
+                var offset = localData[postId].offset;
+                if (offset == null) {
+                    offset = commentsCount;
+                }
+                var limit = 5;
+                var response = await fetch('/posts/getComments?post_id=' + postId + '&offset=' + offset + '&limit=' + limit);
+                var comments = await response.text();
+                if (comments == '') {
+                    showMoreButton.style.display = 'none';
+                    localData[postId].haveComments = false;
+                    return;
+                }
+                offset += limit;
+                localData[postId].offset = offset;
+                commentBox.innerHTML += comments;
+                localData[postId].loading = false;
+            }
+        </script>
     <? endif; ?>
 </main>

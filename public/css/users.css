@@ -53,15 +53,20 @@
 
 .user-record-button-cont {
     margin-inline: 8px;
-    margin-block: 10px;
+    margin-block: 5px;
 }
 
 .user-record-button {
     cursor: pointer;
-    text-decoration: none;
+    border: none;
     color: white;
     padding-inline: 20px;
     padding-block: 7px;
+    font-size: 20px;
+}
+
+.user-record-button:hover {
+    opacity: 0.7;
 }
 
 .edit-user-link {
