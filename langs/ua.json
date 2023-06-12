@@ -40,6 +40,14 @@
             "delete": "Видалити"
         }
     },
+    "edit-user-page":{
+        "title": "Редагування",
+        "name-input-title": "Ім'я:",
+        "email-input-title": "Ел. пошта:",
+        "publish-posts-checkbox-title": "Може публікувати пости:",
+        "cancel-button": "Закрити",
+        "save-button": "Зберегти"
+    },
     "pub-create-form":{
         "title": "Заголовок",
         "content": "Контент",

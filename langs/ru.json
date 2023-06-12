@@ -40,6 +40,14 @@
             "delete": "Удалить"
         }
     },
+    "edit-user-page":{
+        "title": "Редактирование",
+        "name-input-title": "Имя:",
+        "email-input-title": "Ел. почта:",
+        "publish-posts-checkbox-title": "Может публиковать посты:",
+        "cancel-button": "Закрыть",
+        "save-button": "Сохранить"
+    },
     "pub-create-form":{
         "title": "Заголовок",
         "content": "Контент",

@@ -27,7 +27,7 @@ use core\View;
             <? if (count($post['images']) > 0) { ?>
                 <div class="imgs">
                     <div class="selected-image">
-                        <img src="/fs/download?key=<?= $post['images'][1]['key'] ?>">
+                        <img src="/fs/download?key=<?= $post['images'][0]['key'] ?>">
                     </div>
                     <div class="image-container">
                         <? foreach ($post['images'] as $image) { ?>

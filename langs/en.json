@@ -40,6 +40,14 @@
             "delete": "Delete"
         }
     },
+    "edit-user-page":{
+        "title": "Edit",
+        "name-input-title": "Name:",
+        "email-input-title": "Email:",
+        "publish-posts-checkbox-title": "Can publish posts:",
+        "cancel-button": "Cancel",
+        "save-button": "Save"
+    },
     "pub-create-form":{
         "title": "Title",
         "content": "Content",

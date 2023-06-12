@@ -1,3 +1,7 @@
+<footer class="foot-content">
+    <a href="https://github.com/VoDACode/my-blog-php" target="_blank">GitHub</a>
+</footer>
+
 <!--
 <footer class="foot-content">
     <div class="logs_txt_display">

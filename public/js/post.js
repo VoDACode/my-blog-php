@@ -196,7 +196,7 @@
                         div.innerHTML = `<div class="file-type"><img src="/public/img/file.png"></div><div class="name"><a href="#">${name}</a></div><div class="size"><p>${calcSize(file.size)}</p></div>`;
                         const remove = document.createElement('div');
                         remove.classList.add('remove');
-                        remove.innerHTML = '<img src="/img/close.png">';
+                        remove.innerHTML = '<img src="/public/img/close.png">';
                         remove.addEventListener('click', () => {
                             uploadedFileList.removeChild(div);
                             const index = Array.from(inputFiles.files).indexOf(file);
